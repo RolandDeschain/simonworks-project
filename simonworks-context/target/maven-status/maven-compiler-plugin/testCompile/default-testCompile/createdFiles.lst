@@ -1,0 +1,3 @@
+org\simonworks\projects\context\ExamplePrototype.class
+org\simonworks\projects\context\ExampleSingleton.class
+org\simonworks\projects\context\ClasspathBeanRegistryProviderImplTest.class
