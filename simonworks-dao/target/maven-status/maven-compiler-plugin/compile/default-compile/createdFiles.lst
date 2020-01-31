@@ -1,7 +1,0 @@
-org\simonworks\projects\dao\domain\AbstractPageable.class
-org\simonworks\projects\dao\domain\Sort.class
-org\simonworks\projects\dao\DaoSupport.class
-org\simonworks\projects\dao\domain\Sort$Direction.class
-org\simonworks\projects\dao\DataMapper.class
-org\simonworks\projects\dao\PagingAndSortingDao.class
-org\simonworks\projects\dao\domain\Pageable.class
