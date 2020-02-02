@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(AbstractCompositeBeanContext.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCompositeBeanContext.class);
 
     private AbstractBeanContext delegateContext;
 
@@ -68,11 +68,11 @@ public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
         getDelegateContext().doHandleBeanAnnotations(bean, beanInfo);
     }
 
+    @Override
     protected Object get(BeanInfo beanInfo) {
         Object result = null;
         if(getDelegateContext() instanceof AbstractBeanContext) {
-            AbstractBeanContext delegateContext = ((AbstractBeanContext) getDelegateContext());
-            result = super.searchInCache(beanInfo, delegateContext.getSingletonsCache());
+            result = super.searchInCache(beanInfo, getDelegateContext().getSingletonsCache());
         }
         if(result == null) {
             result = super.get(beanInfo);

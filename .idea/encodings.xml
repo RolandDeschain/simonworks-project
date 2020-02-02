@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sample-webapp/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sample-webapp/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-common-jdbc-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-common-jdbc-dao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-common-jdbc-dao/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context-default-impl" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context-default-impl/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context-default-impl/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context-web-impl" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context-web-impl/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context-web-impl/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-context/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-controller" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-controller/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-controller/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-dao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-dao/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-model" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-model/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-model/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-mongo-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-mongo-dao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-mongo-dao/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-mysql-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-mysql-dao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-mysql-dao/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-oracle-dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-oracle-dao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-oracle-dao/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simonworks-web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
