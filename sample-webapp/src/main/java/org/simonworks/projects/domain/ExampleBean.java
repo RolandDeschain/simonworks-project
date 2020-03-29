@@ -6,6 +6,8 @@
 
 package org.simonworks.projects.domain;
 
+import java.util.StringJoiner;
+
 public class ExampleBean {
 
     private String branch;
@@ -30,4 +32,12 @@ public class ExampleBean {
         return amount;
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ExampleBean.class.getSimpleName() + "[", "]")
+                .add("branch='" + branch + "'")
+                .add("id='" + id + "'")
+                .add("amount=" + amount)
+                .toString();
+    }
 }

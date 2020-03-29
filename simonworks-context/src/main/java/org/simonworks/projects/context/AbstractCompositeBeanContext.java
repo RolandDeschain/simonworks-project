@@ -6,7 +6,6 @@
 
 package org.simonworks.projects.context;
 
-import org.simonworks.projects.factory.BeanFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,22 +18,12 @@ public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
 
     private AbstractBeanContext delegateContext;
 
-    AbstractCompositeBeanContext(AbstractBeanContext delegateContext,
-                        String ... packagesToScan) {
-        super(packagesToScan);
-        setDelegateContext(delegateContext);
-        setBeanFactory(delegateContext.getBeanFactory());
-        setSingletonsCache(delegateContext.getSingletonsCache());
+    AbstractCompositeBeanContext(AbstractBeanContext parentContext) {
+        this(parentContext.getBeanRegistry(), parentContext);
     }
 
-    AbstractCompositeBeanContext(AbstractBeanContext parentContext,
-                        BeanFactory beanFactory,
-                        BeanRegistryProvider beanRegistryProvider,
-                        SingletonsCache singletonsCache) {
-        super(
-                beanFactory,
-                beanRegistryProvider,
-                singletonsCache);
+    AbstractCompositeBeanContext(BeanRegistry beanRegistry, AbstractBeanContext parentContext) {
+        super(beanRegistry);
         setDelegateContext(parentContext);
     }
 
@@ -53,6 +42,9 @@ public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
         BeanInfo result = getBeanRegistry().getBeanInfo(name);
         if(result == null) {
             result = getDelegateContext().getBeanRegistry().getBeanInfo(name);
+        }
+        if(LOGGER.isTraceEnabled()) {
+            LOGGER.trace("getBeanInfo(<{}>) = <{}>", name, result);
         }
         return result;
     }
@@ -76,6 +68,10 @@ public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
         }
         if(result == null) {
             result = super.get(beanInfo);
+        } else {
+            if(LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Recovered object <{}> using BeanInfo <{}> from ", result, beanInfo);
+            }
         }
         return result;
     }
@@ -84,15 +80,5 @@ public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
     protected void store(Object result, BeanInfo beanInfo) {
         super.store(result, beanInfo);
         getDelegateContext().store(result, beanInfo);
-    }
-
-    @Override
-    protected SingletonsCache getDefaultSingletonCache() {
-        return getDelegateContext().getDefaultSingletonCache();
-    }
-
-    @Override
-    protected BeanFactory getDefaultBeanFactory() {
-        return getDelegateContext().getDefaultBeanFactory();
     }
 }

@@ -4,36 +4,35 @@
  *
  */
 
-/*
- * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
- *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- */
-
 package org.simonworks.projects.controller;
 
 import org.simonworks.projects.context.BeanContext;
-import org.simonworks.projects.context.DefaultWebBeanContext;
-import org.simonworks.projects.context.annotations.Get;
-import org.simonworks.projects.context.annotations.MethodMapping;
-import org.simonworks.projects.context.annotations.PathParam;
-import org.simonworks.projects.context.annotations.QueryParam;
+import org.simonworks.projects.context.annotations.*;
 import org.simonworks.projects.domain.ExampleBean;
 
+import java.util.UUID;
+
+@WebResource(
+        name = "examplesResource",
+        version = @Version(major = 0, minor = 1, patch = 0, description = "first version"))
 public class ExampleController {
 
     private BeanContext beanContext;
 
-    public ExampleController() {
-        beanContext = new DefaultWebBeanContext(null);
+    @MethodMapping(path = "/examples/{branch}")
+    public ExampleBean myMethod(
+            @PathParam("branch") String branch,
+            @QueryParam("id") String id,
+            @QueryParam("amount") int amount) {
+        return new ExampleBean(branch, id, amount);
     }
 
-    @Get(
-            queryParams = {@QueryParam("id"), @QueryParam("amount")},
-            pathParams = {@PathParam("branch")}
-    )
-    @MethodMapping
-    public ExampleBean myMethod(String branch, String id, int amount) {
-        return new ExampleBean(branch, id, amount);
+    @MethodMapping(path = "/examples")
+    public ExampleBean allExamples() {
+        return new ExampleBean("firstExample", UUID.randomUUID().toString(), 1);
+    }
+
+    public BeanContext getBeanContext() {
+        return beanContext;
     }
 }

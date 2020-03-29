@@ -6,6 +6,8 @@
 
 package org.simonworks.projects.domain;
 
+import java.util.Objects;
+
 /**
  * This class represents a couple of objects
  * @param <A> First object's generic type
@@ -35,5 +37,19 @@ public class Couple<A, B> {
 
     public B getSecond() {
         return second;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Couple<?, ?> couple = (Couple<?, ?>) o;
+        return first.equals(couple.first) &&
+                second.equals(couple.second);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
     }
 }
