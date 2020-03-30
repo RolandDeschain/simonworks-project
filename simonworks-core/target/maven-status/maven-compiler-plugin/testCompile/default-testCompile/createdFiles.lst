@@ -1,0 +1,12 @@
+org\simonworks\projects\utils\StringUtilsTest.class
+org\simonworks\projects\factory\ConfigurationExceptionExample.class
+org\simonworks\projects\domain\AbstractHierarchicalTest$1.class
+org\simonworks\projects\domain\ClearableTest$MyClearable.class
+org\simonworks\projects\factory\BeanFactoryTest$NoDefaultConstructorClass.class
+org\simonworks\projects\factory\BeanFactoryTest.class
+org\simonworks\projects\domain\AbstractHierarchicalTest.class
+org\simonworks\projects\configurations\ConfigurationExceptionTest.class
+org\simonworks\projects\domain\ClearableTest.class
+org\simonworks\projects\utils\AssertionsTest.class
+org\simonworks\projects\factory\Example.class
+org\simonworks\projects\configurations\ExernalPropertyFileConfigurationTest.class

@@ -1,0 +1,11 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+simonworks-context,org.simonworks.projects.context,BeanNotExistsException,23,0,0,0,10,0,5,0,5,0
+simonworks-context,org.simonworks.projects.context,DefaultSingletonsCache,69,0,4,0,14,0,7,0,5,0
+simonworks-context,org.simonworks.projects.context,NoopBeanContext,29,0,0,0,6,0,6,0,6,0
+simonworks-context,org.simonworks.projects.context,NoopSingletonCache,10,0,0,0,4,0,4,0,4,0
+simonworks-context,org.simonworks.projects.context,AbstractBeanContext,282,18,20,0,68,7,28,5,18,5
+simonworks-context,org.simonworks.projects.context,BeanInfo,140,149,10,6,20,44,10,16,2,16
+simonworks-context,org.simonworks.projects.context,ClassUtils,404,0,52,0,71,0,38,0,12,0
+simonworks-context,org.simonworks.projects.context,NoopBeanRegistry,23,0,0,0,5,0,5,0,5,0
+simonworks-context,org.simonworks.projects.context,AbstractCompositeBeanContext,105,0,10,0,32,0,16,0,11,0
+simonworks-context,org.simonworks.projects.context,BeanInfo.Lifecycle,0,24,0,0,0,3,0,1,0,1

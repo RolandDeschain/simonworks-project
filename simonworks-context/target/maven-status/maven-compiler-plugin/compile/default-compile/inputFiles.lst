@@ -1,0 +1,17 @@
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\annotation\Dependency.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\annotation\InjectBeanContext.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\BeanRegistry.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\SingletonsCache.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\BeanNotExistsException.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\ClassUtils.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\NoopBeanRegistry.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\AbstractCompositeBeanContext.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\BeanRegistryProvider.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\NoopBeanContext.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\DefaultSingletonsCache.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\BeanInfo.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\AbstractBeanContext.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\BeanContext.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\InitializableBeanRegistryProvider.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\annotation\CompleteSetup.java
+C:\simonworks\software\projects\simonworks-project\simonworks-context\src\main\java\org\simonworks\projects\context\NoopSingletonCache.java

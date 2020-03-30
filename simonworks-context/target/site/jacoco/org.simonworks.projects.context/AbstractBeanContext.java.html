@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractBeanContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">AbstractBeanContext.java</span></div><h1>AbstractBeanContext.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ * SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+
+package org.simonworks.projects.context;
+
+import org.simonworks.projects.factory.BeanFactory;
+import org.simonworks.projects.factory.DefaultBeanFactory;
+import org.simonworks.projects.utils.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+
+abstract class AbstractBeanContext implements BeanContext {
+
+<span class="fc" id="L21">    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractBeanContext.class);</span>
+<span class="nc" id="L22">    private String id = UUID.randomUUID().toString();</span>
+<span class="nc" id="L23">    private String name = &quot;applicationContext&quot;;</span>
+<span class="nc" id="L24">    private BeanFactory beanFactory = new DefaultBeanFactory();</span>
+    private BeanRegistry beanRegistry;
+<span class="nc" id="L26">    private SingletonsCache singletonsCache = new DefaultSingletonsCache();</span>
+
+<span class="nc" id="L28">    public AbstractBeanContext(BeanRegistry beanRegistry) {</span>
+<span class="nc" id="L29">        setBeanRegistry(beanRegistry);</span>
+<span class="nc" id="L30">    }</span>
+
+    @Override
+    public &lt;T&gt; T getBean(String name) {
+        Object result;
+        // First recover bean info
+<span class="nc" id="L36">        BeanInfo beanInfo = getBeanInfo(name);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        switch(beanInfo.getLifecycle()) {</span>
+            default: case PROTOTYPE:
+<span class="nc" id="L39">                result = processPrototype(beanInfo);</span>
+<span class="nc" id="L40">                break;</span>
+            case SINGLETON:
+<span class="nc" id="L42">                result = processSingleton(beanInfo);</span>
+                break;
+        }
+<span class="nc" id="L45">        handleBeanAnnotations(result, beanInfo);</span>
+<span class="nc" id="L46">        return (T) result;</span>
+    }
+
+    private Object processSingleton(BeanInfo beanInfo) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L51">            LOGGER.debug(&quot;processSingleton(BeanInfo {})&quot;, beanInfo.aliases());</span>
+        }
+        Object result;/*
+         * Checking singletons cache for a ready to use instance
+         */
+<span class="nc" id="L56">        result = get( beanInfo );</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if( result == null ) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if(LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L59">                LOGGER.debug(&quot;No singleton bean available in cache for names &lt;{}&gt;&quot;,  beanInfo.aliases() );</span>
+            }
+            /*
+             * Create the only singletons instance
+             */
+<span class="nc" id="L64">            result = getBeanFactory().create(beanInfo.getBeanClass());</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if(LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L66">                LOGGER.debug(&quot;Created singleton bean &lt;{}&gt; with aliases &lt;{}&gt;&quot;,</span>
+<span class="nc" id="L67">                        result, beanInfo.aliases() );</span>
+            }
+            /*
+             * Register singleton
+             */
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if(LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L73">                LOGGER.debug(&quot;Registering singleton bean &lt;{}&gt; in singleton cache with aliases &lt;{}&gt;&quot;,</span>
+<span class="nc" id="L74">                        result, beanInfo.aliases() );</span>
+            }
+<span class="nc" id="L76">            store(result, beanInfo);</span>
+        }
+<span class="nc" id="L78">        return result;</span>
+    }
+
+    private Object processPrototype(BeanInfo beanInfo) {
+        Object result;/*
+         * Simply create a new instance
+         */
+<span class="nc" id="L85">        result = getBeanFactory().create(beanInfo.getBeanClass());</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if(LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L87">            LOGGER.debug(&quot;Created prototype bean &lt;{}&gt; from using info &lt;{}&gt;&quot;, result, beanInfo);</span>
+        }
+<span class="nc" id="L89">        return result;</span>
+    }
+
+    protected BeanInfo getBeanInfo(String name) {
+<span class="nc" id="L93">        return getBeanRegistry().getBeanInfo(name);</span>
+    }
+
+    public void handleBeanAnnotations(Object bean, BeanInfo beanInfo) {
+<span class="nc" id="L97">        doHandleBeanAnnotations(bean, beanInfo);</span>
+<span class="nc" id="L98">    }</span>
+
+    protected abstract void doHandleBeanAnnotations(Object bean, BeanInfo beanInfo);
+
+    protected void checkRequiredBeanContext(Object result, Field injectableBeanContext) {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if(injectableBeanContext != null) {</span>
+<span class="nc" id="L104">            boolean accessible = injectableBeanContext.isAccessible();</span>
+<span class="nc" id="L105">            injectableBeanContext.setAccessible(true);</span>
+            try {
+<span class="nc" id="L107">                injectableBeanContext.set(result, self());</span>
+<span class="nc" id="L108">            } catch (IllegalAccessException | IllegalArgumentException e) {</span>
+<span class="nc" id="L109">                LOGGER.error(&quot;Exception while invoking checkRequiredApplicationContext(Object &lt;{}&gt;, Field &lt;{}&gt;&quot;,</span>
+                        result, injectableBeanContext, e);
+<span class="nc" id="L111">            }</span>
+<span class="nc" id="L112">            injectableBeanContext.setAccessible(accessible);</span>
+        }
+<span class="nc" id="L114">    }</span>
+
+    protected Object get(BeanInfo beanInfo) {
+<span class="nc" id="L117">        Object result = searchInCache(beanInfo, getSingletonsCache());</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if(LOGGER.isDebugEnabled()) {</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            if(result == null) {</span>
+<span class="nc" id="L120">                LOGGER.debug(&quot;Context {} doesn't contains bean definition for bean info &lt;{}&gt;.\n\tLocal bean recovery returned &lt;{}&gt; &quot;, getId(), beanInfo, result);</span>
+            } else {
+<span class="nc" id="L122">                LOGGER.debug(&quot;Get bean from context {}, using bean info {}, returned &lt;{}&gt;&quot;, getId(), beanInfo, result);</span>
+            }
+        }
+<span class="nc" id="L125">        return result;</span>
+    }
+
+    protected Object searchInCache(BeanInfo beanInfo, SingletonsCache cache) {
+<span class="nc" id="L129">        AtomicReference&lt;Object&gt; atomic = new AtomicReference&lt;&gt;();</span>
+<span class="nc" id="L130">        beanInfo.aliases().forEach(alias -&gt; atomic.set(cache.get(alias)));</span>
+<span class="nc" id="L131">        return atomic.get();</span>
+    }
+
+    protected void store(Object result, BeanInfo beanInfo) {
+<span class="nc" id="L135">        beanInfo.aliases().forEach(alias -&gt; getSingletonsCache().put(alias , result));</span>
+<span class="nc" id="L136">    }</span>
+
+    @Override
+    public String getId() {
+<span class="fc" id="L140">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L144">        this.id = id;</span>
+<span class="fc" id="L145">    }</span>
+
+    @Override
+    public String getName() {
+<span class="fc" id="L149">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L153">        this.name = name;</span>
+<span class="fc" id="L154">    }</span>
+
+    public BeanFactory getBeanFactory() {
+<span class="nc" id="L157">        return beanFactory;</span>
+    }
+
+    public void setBeanFactory(BeanFactory beanFactory) {
+<span class="nc" id="L161">        Assertions.assertNotNull(beanFactory, &quot;Cannot set null bean factory on application context&quot;);</span>
+<span class="nc" id="L162">        this.beanFactory = beanFactory;</span>
+<span class="nc" id="L163">    }</span>
+
+    public BeanRegistry getBeanRegistry() {
+<span class="nc" id="L166">        return Optional.ofNullable(beanRegistry).orElse(NoopBeanRegistry.get());</span>
+    }
+
+    public void setBeanRegistry(BeanRegistry beanRegistry) {
+<span class="nc" id="L170">        Assertions.assertNotNull(beanRegistry, &quot;Bean registry cannot be null&quot;);</span>
+<span class="nc" id="L171">        this.beanRegistry = beanRegistry;</span>
+<span class="nc" id="L172">    }</span>
+
+    public SingletonsCache getSingletonsCache() {
+<span class="nc" id="L175">        return Optional.ofNullable(singletonsCache).orElse(NoopSingletonCache.get());</span>
+    }
+
+    public void setSingletonsCache(SingletonsCache singletonsCache) {
+<span class="nc" id="L179">        Assertions.assertNotNull(singletonsCache, &quot;Cannot set null singletons cache on application context&quot;);</span>
+<span class="nc" id="L180">        this.singletonsCache = singletonsCache;</span>
+<span class="nc" id="L181">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

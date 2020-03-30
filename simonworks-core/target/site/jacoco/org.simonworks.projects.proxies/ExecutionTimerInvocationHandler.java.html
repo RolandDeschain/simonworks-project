@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExecutionTimerInvocationHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-core</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.proxies</a> &gt; <span class="el_source">ExecutionTimerInvocationHandler.java</span></div><h1>ExecutionTimerInvocationHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+package org.simonworks.projects.proxies;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
+
+class ExecutionTimerInvocationHandler&lt;T&gt; extends AbstractInvocationHandler&lt;T&gt; {
+
+<span class="nc" id="L17">    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionTimerInvocationHandler.class);</span>
+
+    public ExecutionTimerInvocationHandler(T realObject) {
+<span class="nc" id="L20">        super(realObject);</span>
+<span class="nc" id="L21">    }</span>
+
+    /**
+     * Processes a method invocation on a proxy instance and returns
+     * the result.  This method will be invoked on an invocation handler
+     * when a method is invoked on a proxy instance that it is
+     * associated with.
+     *
+     * @param proxy  the proxy instance that the method was invoked on
+     * @param method the {@code Method} instance corresponding to
+     *               the interface method invoked on the proxy instance.  The declaring
+     *               class of the {@code Method} object will be the interface that
+     *               the method was declared in, which may be a superinterface of the
+     *               proxy interface that the proxy class inherits the method through.
+     * @param args   an array of objects containing the values of the
+     *               arguments passed in the method invocation on the proxy instance,
+     *               or {@code null} if interface method takes no arguments.
+     *               Arguments of primitive types are wrapped in instances of the
+     *               appropriate primitive wrapper class, such as
+     *               {@code java.lang.Integer} or {@code java.lang.Boolean}.
+     * @return the value to return from the method invocation on the
+     * proxy instance.  If the declared return type of the interface
+     * method is a primitive type, then the value returned by
+     * this method must be an instance of the corresponding primitive
+     * wrapper class; otherwise, it must be a type assignable to the
+     * declared return type.  If the value returned by this method is
+     * {@code null} and the interface method's return type is
+     * primitive, then a {@code NullPointerException} will be
+     * thrown by the method invocation on the proxy instance.  If the
+     * value returned by this method is otherwise not compatible with
+     * the interface method's declared return type as described above,
+     * a {@code ClassCastException} will be thrown by the method
+     * invocation on the proxy instance.
+     * @throws Throwable the exception to throw from the method
+     *                   invocation on the proxy instance.  The exception's type must be
+     *                   assignable either to any of the exception types declared in the
+     *                   {@code throws} clause of the interface method or to the
+     *                   unchecked exception types {@code java.lang.RuntimeException}
+     *                   or {@code java.lang.Error}.  If a checked exception is
+     *                   thrown by this method that is not assignable to any of the
+     *                   exception types declared in the {@code throws} clause of
+     *                   the interface method, then an
+     *                   {@link UndeclaredThrowableException} containing the
+     *                   exception that was thrown by this method will be thrown by the
+     *                   method invocation on the proxy instance.
+     * @see UndeclaredThrowableException
+     */
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+<span class="nc" id="L70">        long start = System.currentTimeMillis();</span>
+<span class="nc" id="L71">        Object result = method.invoke(getRealObject(), args);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if(LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L73">            LOGGER.info(&quot;Execution of method {} on object {} took {} millis to run&quot;, method.getName(), getRealObject(), System.currentTimeMillis() - start);</span>
+        }
+<span class="nc" id="L75">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

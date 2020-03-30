@@ -1,0 +1,17 @@
+
+m
+java:S1192,"KDefine a constant instead of duplicating this literal " on class " 4 times.(—œÿĞÿÿÿÿÿ8…ºÉ‘.
+V
+java:S1874>"4Remove this use of "isAccessible"; it is deprecated.(¤Î¿îüÿÿÿÿ8àÎÈ‘.
+W
+java:S1118":Add a private constructor to hide the implicit public one.(ĞÿøÀ8á˜¡½‘.
+Z
+java:S2589"7Remove this expression which always evaluates to "true"(ÇñÍıÿÿÿÿ8ÅõŸ´’.
+O
+java:S1172•",Remove this unused method parameter "clazz".(‡’ç³ÿÿÿÿÿ8‹¼å˜‘.
+u
+java:S2737"WAdd logic to this catch clause or eliminate it and rethrow the exception automatically.(ö™û8É‡ì«’.
+I
+java:S1172„",Remove this unused method parameter "clazz".(Úƒ¼{8Í¿ì«’.
+W
+java:S1874‡"4Remove this use of "isAccessible"; it is deprecated.(¶‰úÌıÿÿÿÿ8É‡ì«’.

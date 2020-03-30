@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractCompositeBeanContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">AbstractCompositeBeanContext.java</span></div><h1>AbstractCompositeBeanContext.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+package org.simonworks.projects.context;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * {@link AbstractCompositeBeanContext} is a special implementation of BeanContext that can delegate bean recovery/store to a delegate {@link AbstractBeanContext}.
+ */
+public abstract class AbstractCompositeBeanContext extends AbstractBeanContext {
+
+<span class="nc" id="L17">    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCompositeBeanContext.class);</span>
+
+    private AbstractBeanContext delegateContext;
+
+    AbstractCompositeBeanContext(AbstractBeanContext parentContext) {
+<span class="nc" id="L22">        this(parentContext.getBeanRegistry(), parentContext);</span>
+<span class="nc" id="L23">    }</span>
+
+    AbstractCompositeBeanContext(BeanRegistry beanRegistry, AbstractBeanContext parentContext) {
+<span class="nc" id="L26">        super(beanRegistry);</span>
+<span class="nc" id="L27">        setDelegateContext(parentContext);</span>
+<span class="nc" id="L28">    }</span>
+
+    public AbstractBeanContext getDelegateContext() {
+<span class="nc" id="L31">        return delegateContext;</span>
+    }
+
+    public void setDelegateContext(AbstractBeanContext delegateContext) {
+<span class="nc" id="L35">        this.delegateContext = delegateContext;</span>
+<span class="nc" id="L36">    }</span>
+
+<span class="nc" id="L38">    public BeanContext getNoopDelegateContext() { return NoopBeanContext.get(); }</span>
+
+    @Override
+    protected BeanInfo getBeanInfo(String name) {
+<span class="nc" id="L42">        BeanInfo result = getBeanRegistry().getBeanInfo(name);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if(result == null) {</span>
+<span class="nc" id="L44">            result = getDelegateContext().getBeanRegistry().getBeanInfo(name);</span>
+        }
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if(LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L47">            LOGGER.trace(&quot;getBeanInfo(&lt;{}&gt;) = &lt;{}&gt;&quot;, name, result);</span>
+        }
+<span class="nc" id="L49">        return result;</span>
+    }
+
+    @Override
+    public void handleBeanAnnotations(Object bean, BeanInfo beanInfo) {
+<span class="nc" id="L54">        super.handleBeanAnnotations(bean, beanInfo);</span>
+<span class="nc" id="L55">        getDelegateContext().handleBeanAnnotations(bean, beanInfo);</span>
+<span class="nc" id="L56">    }</span>
+
+    @Override
+    protected void doHandleBeanAnnotations(Object bean, BeanInfo beanInfo) {
+<span class="nc" id="L60">        getDelegateContext().doHandleBeanAnnotations(bean, beanInfo);</span>
+<span class="nc" id="L61">    }</span>
+
+    @Override
+    protected Object get(BeanInfo beanInfo) {
+<span class="nc" id="L65">        Object result = null;</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if(getDelegateContext() instanceof AbstractBeanContext) {</span>
+<span class="nc" id="L67">            result = super.searchInCache(beanInfo, getDelegateContext().getSingletonsCache());</span>
+        }
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if(result == null) {</span>
+<span class="nc" id="L70">            result = super.get(beanInfo);</span>
+        } else {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if(LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L73">                LOGGER.trace(&quot;Recovered object &lt;{}&gt; using BeanInfo &lt;{}&gt; from &quot;, result, beanInfo);</span>
+            }
+        }
+<span class="nc" id="L76">        return result;</span>
+    }
+
+    @Override
+    protected void store(Object result, BeanInfo beanInfo) {
+<span class="nc" id="L81">        super.store(result, beanInfo);</span>
+<span class="nc" id="L82">        getDelegateContext().store(result, beanInfo);</span>
+<span class="nc" id="L83">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

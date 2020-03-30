@@ -1,0 +1,10 @@
+
+U
+java:S1874D"3Remove this use of "newInstance"; it is deprecated.(Ä‹å˜ıÿÿÿÿ8ÜûÂ‘.
+I
+java:S1612",Replace this lambda with a method reference.(’‰ÿƒ8š´’.
+F
+java:S19054")Remove this unnecessary cast to "Object".(„çœİ8Êú§È‘.
+^	java:S125Ÿ"<This block of commented-out lines of code should be removed.(‘ø°ìıÿÿÿÿ8®°¬´’.
+I
+java:S1612$",Replace this lambda with a method reference.(öúèõ8š´’.

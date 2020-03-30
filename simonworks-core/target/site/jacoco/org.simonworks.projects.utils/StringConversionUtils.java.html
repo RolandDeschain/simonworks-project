@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringConversionUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-core</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.utils</a> &gt; <span class="el_source">StringConversionUtils.java</span></div><h1>StringConversionUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+package org.simonworks.projects.utils;
+
+import org.simonworks.projects.domain.DataMapper;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class StringConversionUtils {
+
+    private static Map&lt;Class&lt;?&gt;, DataMapper&lt;String, ?&gt;&gt; mappers;
+    static {
+<span class="nc" id="L22">        Map&lt;Class&lt;?&gt;, DataMapper&lt;String, ?&gt;&gt; m = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="nc" id="L23">        m.put(Integer.class, Integer::valueOf);</span>
+<span class="nc" id="L24">        m.put(int.class, Integer::valueOf);</span>
+<span class="nc" id="L25">        m.put(Long.class, Long::valueOf);</span>
+<span class="nc" id="L26">        m.put(long.class, Long::valueOf);</span>
+<span class="nc" id="L27">        m.put(String.class, o -&gt; o);</span>
+<span class="nc" id="L28">        m.put(Boolean.class, Boolean::valueOf);</span>
+<span class="nc" id="L29">        m.put(boolean.class, Boolean::valueOf);</span>
+<span class="nc" id="L30">        m.put(Double.class, Double::valueOf);</span>
+<span class="nc" id="L31">        m.put(double.class, Double::valueOf);</span>
+<span class="nc" id="L32">        m.put(Date.class, o -&gt; {</span>
+<span class="nc" id="L33">            SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyyMMdd&quot;);</span>
+            try {
+<span class="nc" id="L35">                return sdf.parse(o);</span>
+<span class="nc" id="L36">            } catch (ParseException e) {</span>
+<span class="nc" id="L37">                return null;</span>
+            }
+        });
+<span class="nc" id="L40">        mappers = Collections.unmodifiableMap(m);</span>
+<span class="nc" id="L41">    }</span>
+
+    private StringConversionUtils() {}
+
+    public static &lt;T&gt; T convert(Class&lt;T&gt; toClass, String source) {
+<span class="nc" id="L46">        return (T) mappers.get(toClass).map(source);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

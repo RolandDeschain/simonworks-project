@@ -1,0 +1,4 @@
+org\simonworks\projects\context\MapBeanRegistry.class
+org\simonworks\projects\context\AbstractClasspathBeanRegistryProvider.class
+org\simonworks\projects\context\DefaultBeanContext.class
+org\simonworks\projects\context\MapBeanRegistryProvider.class

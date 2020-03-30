@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultBeanFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-core</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.factory</a> &gt; <span class="el_source">DefaultBeanFactory.java</span></div><h1>DefaultBeanFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ * SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+
+package org.simonworks.projects.factory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.lang.Class.forName;
+import static java.util.Collections.synchronizedList;
+import static org.simonworks.projects.utils.Assertions.assertNotNull;
+
+public class DefaultBeanFactory implements BeanFactory {
+
+<span class="fc" id="L21">    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBeanFactory.class);</span>
+
+<span class="fc" id="L23">    private List&lt;BeanCreationPhase&gt; creationPipeline = synchronizedList(new ArrayList&lt;&gt;());</span>
+
+<span class="fc" id="L25">    public DefaultBeanFactory() {</span>
+<span class="fc" id="L26">        creationPipeline.addAll(</span>
+<span class="fc" id="L27">                Arrays.asList(</span>
+                        new PostConstructPhase(),
+                        new ConfigurationPhase()));
+<span class="fc" id="L30">    }</span>
+
+    public DefaultBeanFactory(List&lt;BeanCreationPhase&gt; creationPipeline) {
+<span class="nc" id="L33">        this();</span>
+<span class="nc" id="L34">        this.creationPipeline.addAll(creationPipeline);</span>
+<span class="nc" id="L35">    }</span>
+
+    @Override
+    public &lt;T&gt; T create(String qualifiedName) {
+<span class="fc" id="L39">        assertNotNull(qualifiedName, &quot;Class to create cannot be null!&quot;);</span>
+        try {
+<span class="fc" id="L41">            Class&lt;?&gt; clazz = forName(qualifiedName);</span>
+<span class="fc" id="L42">            return (T) create(clazz);</span>
+<span class="fc" id="L43">        } catch (ClassNotFoundException e) {</span>
+<span class="fc" id="L44">            throw new BeanCreationException(&quot;Cannot create object &quot; + qualifiedName, e);</span>
+        }
+    }
+
+    @Override
+    public &lt;T&gt; T create(Class&lt;T&gt; clazz) {
+<span class="fc" id="L50">        assertNotNull(clazz, &quot;Class to create cannot be null!&quot;);</span>
+        try {
+<span class="fc" id="L52">            T result = clazz.newInstance();</span>
+<span class="fc" id="L53">            applyCreationPipeline(result);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">            if(LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L55">                LOGGER.trace(&quot;Just created object &lt;{}&gt; of class &lt;{}&gt;&quot;, result, clazz);</span>
+            }
+<span class="fc" id="L57">            return result;</span>
+<span class="fc" id="L58">        } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="fc" id="L59">            throw new BeanCreationException(&quot;Object of class &quot; + clazz + &quot; is missing default public constructor&quot;, e);</span>
+        }
+    }
+
+    private &lt;T&gt; void applyCreationPipeline(T result) {
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if(LOGGER.isTraceEnabled()) {</span>
+<span class="nc" id="L65">            LOGGER.trace(&quot;Applying creation pipeline &lt;{}&gt; on object &lt;{}&gt;&quot;, creationPipeline, result);</span>
+        }
+<span class="fc" id="L67">        creationPipeline.forEach(</span>
+<span class="fc" id="L68">                beanCreationPhase -&gt; beanCreationPhase.apply(result));</span>
+<span class="fc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

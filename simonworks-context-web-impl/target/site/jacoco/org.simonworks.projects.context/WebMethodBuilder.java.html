@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebMethodBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context-web-impl</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">WebMethodBuilder.java</span></div><h1>WebMethodBuilder.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+package org.simonworks.projects.context;
+
+import org.simonworks.projects.context.annotations.MethodMapping;
+import org.simonworks.projects.context.annotations.PathParam;
+import org.simonworks.projects.utils.Assertions;
+import org.simonworks.projects.utils.StringUtils;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.List;
+
+public class WebMethodBuilder {
+
+    public static final String PATH_VARIABLE_START = &quot;/{&quot;;
+    public static final String PATH_VARIABLE_END = &quot;}&quot;;
+
+    private WebMethodBuilder() {}
+
+    /**
+     * Creates a {@link WebMethodBuilder} that takes data from {@link MethodMapping} in input
+     * @see WebPathIterator
+     */
+    public static WebMethod buildWebMethod(Method underlyingMethod) {
+<span class="fc" id="L30">        MethodMapping mapping = underlyingMethod.getAnnotation(MethodMapping.class);</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if(mapping == null) {</span>
+<span class="nc" id="L32">            return null;</span>
+        }
+<span class="fc" id="L34">        WebMethod result = new WebMethod(underlyingMethod);</span>
+<span class="fc" id="L35">        WebPathIterator i = new WebPathIterator(mapping.path());</span>
+<span class="fc" id="L36">        StringBuilder exposedName = new StringBuilder();</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        while(i.hasNext()) {</span>
+<span class="fc" id="L38">            String s = i.next();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">            if(isPathVariable(s)) {</span>
+<span class="fc" id="L40">                result.addPathParam( createWebParam(s, underlyingMethod) );</span>
+<span class="fc" id="L41">                i.forEachRemaining(s1 -&gt; result.addPathParam( createWebParam(s1, underlyingMethod) ));</span>
+            } else {
+<span class="fc" id="L43">                exposedName.append(s);</span>
+            }
+<span class="fc" id="L45">        }</span>
+<span class="fc" id="L46">        result.setExposedName(exposedName.toString());</span>
+<span class="fc" id="L47">        return result;</span>
+    }
+
+    private static boolean isPathVariable(String s) {
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        return StringUtils.isNotEmpty(s)</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                &amp;&amp; s.startsWith(PATH_VARIABLE_START)</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                &amp;&amp; s.endsWith(PATH_VARIABLE_END);</span>
+    }
+
+    private static WebMethod.WebParam createWebParam(String v, Method targetMethod) {
+<span class="fc" id="L57">        Assertions.assertTrue(</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">                v.startsWith(PATH_VARIABLE_START)</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">                        &amp;&amp; v.endsWith(PATH_VARIABLE_END),</span>
+                &quot;Invalid path variable format &quot; + v +
+                        &quot;. Path variable must start with \&quot;/{\&quot; and end with \&quot;}\&quot; strings&quot;);
+
+<span class="fc" id="L63">        String m = v.substring(2, v.length() - 1);</span>
+<span class="fc" id="L64">        int i = 0;</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        for(Parameter p : targetMethod.getParameters()) {</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">            if(p.isAnnotationPresent(PathParam.class)) {</span>
+<span class="fc" id="L67">                PathParam param = p.getAnnotation(PathParam.class);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                if(param.value().equals(m)) {</span>
+<span class="fc" id="L69">                    return WebMethod.WebParam.pathParam(param.value(), p.getType(), i);</span>
+                }
+            }
+<span class="fc" id="L72">            i++;</span>
+        }
+<span class="nc" id="L74">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

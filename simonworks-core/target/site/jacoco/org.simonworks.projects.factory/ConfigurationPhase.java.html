@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigurationPhase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-core</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.factory</a> &gt; <span class="el_source">ConfigurationPhase.java</span></div><h1>ConfigurationPhase.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ * SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+
+package org.simonworks.projects.factory;
+
+import org.simonworks.projects.annotations.Configurable;
+import org.simonworks.projects.configurations.Configuration;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+<span class="fc" id="L15">final class ConfigurationPhase implements BeanCreationPhase {</span>
+
+    @Override
+    public void apply(Object obj) {
+<span class="fc" id="L19">        Class&lt;?&gt; clazz = obj.getClass();</span>
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">        if (clazz.isAnnotationPresent(Configurable.class)) {</span>
+<span class="fc" id="L21">            Configurable configurable = clazz.getAnnotation(Configurable.class);</span>
+<span class="fc" id="L22">            Class&lt;? extends Configuration&gt; configurationClass = configurable.configurationClass();</span>
+<span class="fc" id="L23">            String configurationMethodName = configurable.configurationMethod();</span>
+<span class="fc" id="L24">            String configurationFile = configurable.configurationFile();</span>
+            try {
+<span class="fc" id="L26">                Constructor&lt;? extends Configuration&gt; configurationClassConstructor = configurationClass.getConstructor(String.class);</span>
+<span class="fc" id="L27">                Configuration configuration = configurationClassConstructor.newInstance(configurationFile);</span>
+<span class="fc" id="L28">                Method configurationMethod = clazz.getDeclaredMethod(configurationMethodName, Configuration.class);</span>
+<span class="fc" id="L29">                boolean accessibility = configurationMethod.isAccessible();</span>
+<span class="fc" id="L30">                configurationMethod.setAccessible(true);</span>
+<span class="fc" id="L31">                configurationMethod.invoke(obj, configuration);</span>
+<span class="fc" id="L32">                configurationMethod.setAccessible(accessibility);</span>
+<span class="nc" id="L33">            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {</span>
+<span class="nc" id="L34">                throw new BeanCreationException(&quot;Cannot apply ConfigurablePhase (@Configurable annotation) phase on target Object &quot; + obj, e);</span>
+<span class="fc" id="L35">            }</span>
+        }
+<span class="fc" id="L37">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

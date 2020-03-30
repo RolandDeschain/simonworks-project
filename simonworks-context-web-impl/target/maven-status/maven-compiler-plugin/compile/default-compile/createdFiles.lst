@@ -1,0 +1,17 @@
+org\simonworks\projects\context\annotations\WebResource.class
+org\simonworks\projects\context\DefaultWebBeanContext.class
+org\simonworks\projects\context\WebBeanContext.class
+org\simonworks\projects\context\WebMethod$WebParam.class
+org\simonworks\projects\context\WebMethodBuilder.class
+org\simonworks\projects\context\annotations\Version.class
+org\simonworks\projects\context\VersionableUriWebResourceProcessor.class
+org\simonworks\projects\context\WebPathIterator.class
+org\simonworks\projects\context\annotations\QueryParam.class
+org\simonworks\projects\context\WebBeanInfo.class
+org\simonworks\projects\context\WebResourceProcessor.class
+org\simonworks\projects\context\WebBeanRegistry.class
+org\simonworks\projects\context\WebMethod.class
+org\simonworks\projects\context\WebBeanRegistryProvider.class
+org\simonworks\projects\context\annotations\MethodMapping.class
+org\simonworks\projects\context\annotations\PathParam.class
+org\simonworks\projects\context\annotations\HttpVerb.class

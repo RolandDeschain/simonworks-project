@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebMethod.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context-web-impl</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">WebMethod.java</span></div><h1>WebMethod.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+package org.simonworks.projects.context;
+
+import org.simonworks.projects.utils.CollectionUtils;
+
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class WebMethod {
+
+    private final Method underlyingMethod;
+    private String exposedName;
+    private List&lt;WebParam&gt; pathParams;
+    private List&lt;WebParam&gt; queryParams;
+
+<span class="fc" id="L22">    public WebMethod(Method underlyingMethod) {</span>
+<span class="fc" id="L23">        this.underlyingMethod = underlyingMethod;</span>
+<span class="fc" id="L24">    }</span>
+
+    public void addPathParam(WebParam webParam) {
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if(pathParams == null) {</span>
+<span class="fc" id="L28">            pathParams = new ArrayList&lt;&gt;();</span>
+        }
+<span class="fc" id="L30">        pathParams.add(</span>
+                Objects
+<span class="fc" id="L32">                        .requireNonNull(webParam));</span>
+<span class="fc" id="L33">    }</span>
+
+    public void addQueryParam(WebParam webParam) {
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if(queryParams == null) {</span>
+<span class="fc" id="L37">            queryParams = new ArrayList&lt;&gt;();</span>
+        }
+<span class="fc" id="L39">        queryParams.add(</span>
+                Objects
+<span class="fc" id="L41">                        .requireNonNull(webParam));</span>
+<span class="fc" id="L42">    }</span>
+
+    public boolean hasParameters() {
+<span class="nc bnc" id="L45" title="All 4 branches missed.">        return CollectionUtils.isNotEmpty(pathParams) || CollectionUtils.isNotEmpty(queryParams);</span>
+    }
+
+    public static class WebParam {
+        private String paramName;
+        private boolean isQueryParam;
+        private boolean isPathParam;
+        private Class&lt;?&gt; type;
+        private int ordinal;
+
+<span class="fc" id="L55">        private WebParam(String paramName, Class&lt;?&gt; type, int ordinal) {</span>
+<span class="fc" id="L56">            this.paramName = paramName;</span>
+<span class="fc" id="L57">            this.type = type;</span>
+<span class="fc" id="L58">            this.ordinal = ordinal;</span>
+<span class="fc" id="L59">        }</span>
+
+        public static WebParam queryParam(String paramName, Class&lt;?&gt; type, int ordinal) {
+<span class="fc" id="L62">            WebParam wp = new WebParam(paramName, type, ordinal);</span>
+<span class="fc" id="L63">            wp.isQueryParam = true;</span>
+<span class="fc" id="L64">            wp.isPathParam = false;</span>
+<span class="fc" id="L65">            return wp;</span>
+        }
+
+        public static WebParam pathParam(String paramName, Class&lt;?&gt; type, int ordinal) {
+<span class="fc" id="L69">            WebParam wp = new WebParam(paramName, type, ordinal);</span>
+<span class="fc" id="L70">            wp.isQueryParam = false;</span>
+<span class="fc" id="L71">            wp.isPathParam = true;</span>
+<span class="fc" id="L72">            return wp;</span>
+        }
+
+        public String getParamName() {
+<span class="fc" id="L76">            return paramName;</span>
+        }
+
+        public Class&lt;?&gt; getType() {
+<span class="nc" id="L80">            return type;</span>
+        }
+
+        public int getOrdinal() {
+<span class="nc" id="L84">            return ordinal;</span>
+        }
+
+        public boolean isPathParam() {
+<span class="fc" id="L88">            return isPathParam;</span>
+        }
+
+        public boolean isQueryParam() {
+<span class="nc" id="L92">            return isQueryParam;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="fc" id="L97">            return new StringJoiner(&quot;, &quot;, WebParam.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L98">                    .add(&quot;paramName='&quot; + paramName + &quot;'&quot;)</span>
+<span class="fc" id="L99">                    .add(&quot;isQueryParam=&quot; + isQueryParam)</span>
+<span class="fc" id="L100">                    .add(&quot;isPathParam=&quot; + isPathParam)</span>
+<span class="fc" id="L101">                    .add(&quot;type=&quot; + type)</span>
+<span class="fc" id="L102">                    .add(&quot;ordinal=&quot; + ordinal)</span>
+<span class="fc" id="L103">                    .toString();</span>
+        }
+    }
+
+    public String getExposedName() {
+<span class="fc" id="L108">        return exposedName;</span>
+    }
+
+    public void setExposedName(String exposedName) {
+<span class="fc" id="L112">        this.exposedName = exposedName;</span>
+<span class="fc" id="L113">    }</span>
+
+    public Method getUnderlyingMethod() {
+<span class="nc" id="L116">        return underlyingMethod;</span>
+    }
+
+    public List&lt;WebParam&gt; getPathParams() {
+<span class="fc" id="L120">        return pathParams;</span>
+    }
+
+    public List&lt;WebParam&gt; getQueryParams() {
+<span class="nc" id="L124">        return queryParams;</span>
+    }
+
+    public List&lt;String&gt; getVariableNames() {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        return pathParams == null ? null : pathParams</span>
+<span class="fc" id="L129">                .stream()</span>
+<span class="fc" id="L130">                .filter(WebParam::isPathParam)</span>
+<span class="fc" id="L131">                .map(WebParam::getParamName)</span>
+<span class="fc" id="L132">                .collect(Collectors.toList());</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L137">        return new StringJoiner(&quot;, &quot;, WebMethod.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L138">                .add(&quot;underlyingMethod=&quot; + underlyingMethod.getName())</span>
+<span class="fc" id="L139">                .add(&quot;exposedName=&quot; + exposedName)</span>
+<span class="fc" id="L140">                .add(&quot;pathParams=&quot; + pathParams)</span>
+<span class="fc" id="L141">                .add(&quot;queryParams=&quot; + queryParams)</span>
+<span class="fc" id="L142">                .toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

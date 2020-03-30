@@ -1,0 +1,12 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+simonworks-context-web-impl,org.simonworks.projects.context.annotations,HttpVerb,0,54,0,0,0,6,0,1,0,1
+simonworks-context-web-impl,org.simonworks.projects.context,DefaultWebBeanContext,17,4,2,0,6,2,3,1,2,1
+simonworks-context-web-impl,org.simonworks.projects.context,WebMethod.WebParam,9,116,0,0,3,22,3,6,3,6
+simonworks-context-web-impl,org.simonworks.projects.context,WebBeanRegistryProvider,14,17,0,0,5,6,3,2,3,2
+simonworks-context-web-impl,org.simonworks.projects.context,WebResourceProcessor,0,60,0,4,0,16,0,4,0,2
+simonworks-context-web-impl,org.simonworks.projects.context,WebMethodBuilder,4,145,6,16,2,28,6,9,0,4
+simonworks-context-web-impl,org.simonworks.projects.context,WebBeanInfo,0,197,3,5,0,44,3,17,0,16
+simonworks-context-web-impl,org.simonworks.projects.context,WebPathIterator,4,65,1,5,1,13,1,5,0,3
+simonworks-context-web-impl,org.simonworks.projects.context,VersionableUriWebResourceProcessor,4,23,1,1,1,6,1,2,0,2
+simonworks-context-web-impl,org.simonworks.projects.context,WebBeanRegistry,3,30,1,3,1,6,2,5,1,4
+simonworks-context-web-impl,org.simonworks.projects.context,WebMethod,18,119,5,5,3,28,6,10,3,8

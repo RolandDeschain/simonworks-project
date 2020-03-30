@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BeanInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">BeanInfo.java</span></div><h1>BeanInfo.java</h1><pre class="source lang-java linenums">package org.simonworks.projects.context;
+
+import org.simonworks.projects.annotations.Prototype;
+import org.simonworks.projects.annotations.Singleton;
+import org.simonworks.projects.context.annotation.CompleteSetup;
+import org.simonworks.projects.context.annotation.Dependency;
+import org.simonworks.projects.context.annotation.InjectBeanContext;
+import org.simonworks.projects.utils.StringUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+class BeanInfo {
+
+    private List&lt;String&gt; aliases;
+
+    private Class&lt;?&gt; beanClass;
+
+    /**
+     * Map of bean dependencies. key is the name of a dependency bean, value if the metadata annotation
+     */
+    private Map&lt;Field, Dependency&gt; dependencies;
+    /**
+     * Special dependency for BeanContext
+     */
+    private Field injectableBeanContext;
+    /**
+     * Method to be called after any other creation phase
+     */
+    private Method completeSetup;
+
+    private Lifecycle lifecycle;
+
+<span class="fc" id="L37">    enum Lifecycle {</span>
+<span class="fc" id="L38">        SINGLETON,</span>
+<span class="fc" id="L39">        PROTOTYPE</span>
+    }
+
+<span class="fc" id="L42">    BeanInfo(Class&lt;?&gt; clazz) {</span>
+<span class="fc" id="L43">        fromClass(clazz);</span>
+<span class="fc" id="L44">        lifecycle = initLifecycle();</span>
+<span class="fc" id="L45">        initAliases();</span>
+<span class="fc" id="L46">        checkDependencies();</span>
+<span class="fc" id="L47">    }</span>
+
+    protected void fromClass(Class&lt;?&gt; clazz) {
+<span class="fc" id="L50">        this.beanClass = Objects.requireNonNull(clazz, &quot;Bean class cannot be null&quot;);</span>
+<span class="fc" id="L51">    }</span>
+
+    protected Lifecycle initLifecycle() {
+<span class="fc" id="L54">        Lifecycle result = null;</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (beanClass.isAnnotationPresent(Singleton.class)) {</span>
+<span class="fc" id="L56">            result = BeanInfo.Lifecycle.SINGLETON;</span>
+        } else {
+<span class="nc" id="L58">            result = BeanInfo.Lifecycle.PROTOTYPE;</span>
+        }
+<span class="fc" id="L60">        return result;</span>
+    }
+
+    private void initAliases() {
+<span class="fc" id="L64">        aliases = resolveBeanAliasesUsingAnnotations();</span>
+<span class="pc bpc" id="L65" title="2 of 4 branches missed.">        if (aliases == null || aliases.isEmpty()) {</span>
+<span class="nc" id="L66">            aliases = resolveBeanAliasesUsingClassName();</span>
+        }
+<span class="fc" id="L68">    }</span>
+
+    protected List&lt;String&gt; resolveBeanAliasesUsingAnnotations() {
+<span class="fc" id="L71">        List&lt;String&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L72">        Prototype prototype = beanClass.getAnnotation(Prototype.class);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if(prototype != null) {</span>
+<span class="nc" id="L74">            result.add(prototype.name());</span>
+        } else {
+<span class="fc" id="L76">            Singleton singleton = beanClass.getAnnotation(Singleton.class);</span>
+<span class="pc bpc" id="L77" title="2 of 4 branches missed.">            if(singleton != null &amp;&amp; StringUtils.isNotEmpty(singleton.name())) {</span>
+<span class="fc" id="L78">                result.add(singleton.name());</span>
+            }
+        }
+<span class="fc" id="L81">        return result;</span>
+    }
+
+    private List&lt;String&gt; resolveBeanAliasesUsingClassName() {
+<span class="nc" id="L85">        List&lt;String&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L86">        String name = beanClass.getName();</span>
+<span class="nc" id="L87">        name = name.substring(name.lastIndexOf('.') + 1);</span>
+<span class="nc" id="L88">        char[] chars = name.toCharArray();</span>
+<span class="nc" id="L89">        StringJoiner joiner = new StringJoiner(&quot;&quot;);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for(char c : chars) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if(Character.isUpperCase(c)) {</span>
+<span class="nc" id="L92">                joiner.add(&quot;-&quot; + Character.toLowerCase(c));</span>
+            } else {
+<span class="nc" id="L94">                joiner.add(String.valueOf(c));</span>
+            }
+        }
+<span class="nc" id="L97">        result.add(joiner.toString().substring(1));</span>
+<span class="nc" id="L98">        return result;</span>
+    }
+
+    private void checkDependencies() {
+<span class="fc" id="L102">        dependencies = Arrays</span>
+<span class="fc" id="L103">                .stream(beanClass.getDeclaredFields())</span>
+<span class="fc" id="L104">                .filter(field -&gt;</span>
+<span class="fc" id="L105">                        field.isAnnotationPresent(Dependency.class))</span>
+<span class="fc" id="L106">                .collect(Collectors.toMap(Function.identity(), field -&gt; field.getAnnotation(Dependency.class)));</span>
+
+<span class="fc" id="L108">        injectableBeanContext = Arrays</span>
+<span class="fc" id="L109">                .stream(beanClass.getDeclaredFields())</span>
+<span class="fc" id="L110">                .filter(f -&gt;</span>
+<span class="fc" id="L111">                        f.isAnnotationPresent(InjectBeanContext.class))</span>
+<span class="fc" id="L112">                .findAny().orElse(null);</span>
+
+<span class="fc" id="L114">        completeSetup = Arrays</span>
+<span class="fc" id="L115">                .stream(beanClass.getDeclaredMethods())</span>
+<span class="fc" id="L116">                .filter(m -&gt;</span>
+<span class="fc" id="L117">                        m.isAnnotationPresent(CompleteSetup.class))</span>
+<span class="fc" id="L118">                .findAny().orElse(null);</span>
+<span class="fc" id="L119">    }</span>
+
+    public List&lt;String&gt; aliases() {
+<span class="fc" id="L122">        return aliases;</span>
+    }
+
+    Class&lt;?&gt; getBeanClass() {
+<span class="fc" id="L126">        return beanClass;</span>
+    }
+
+    Map&lt;Field, Dependency&gt; getDependencies() {
+<span class="fc" id="L130">        return dependencies;</span>
+    }
+
+    Field getInjectableBeanContext() {
+<span class="fc" id="L134">        return injectableBeanContext;</span>
+    }
+
+    Method getCompleteSetup() {
+<span class="fc" id="L138">        return completeSetup;</span>
+    }
+
+    Lifecycle getLifecycle() {
+<span class="fc" id="L142">        return lifecycle;</span>
+    }
+
+   @Override
+    public String toString() {
+<span class="nc" id="L147">        return new StringJoiner(&quot;, &quot;, BeanInfo.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="nc" id="L148">                .add(&quot;aliases=&quot; + aliases + &quot;'&quot;)</span>
+<span class="nc" id="L149">                .add(&quot;beanClass=&quot; + beanClass)</span>
+<span class="nc" id="L150">                .add(&quot;dependencies=&quot; + dependencies)</span>
+<span class="nc" id="L151">                .add(&quot;lifecycle=&quot; + lifecycle)</span>
+<span class="nc" id="L152">                .toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
