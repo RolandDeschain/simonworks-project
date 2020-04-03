@@ -6,22 +6,29 @@
 
 package org.simonworks.projects.coversion.json;
 
+import java.io.IOException;
 import java.util.function.IntPredicate;
-import java.util.function.Predicate;
 
 import static org.simonworks.projects.utils.Assertions.assertNotNull;
 
 /**
- *
+ * {@link JsonReader} implementation that reads from a char[].
  */
 public class JsonCharArrayReader implements JsonReader {
 
+    private String source;
     private char[] chars;
     private int index = 0;
 
     public JsonCharArrayReader(String source) {
         assertNotNull(source, "Source string cannot be null!");
+        this.source = source;
         this.chars = source.toCharArray();
+    }
+
+    @Override
+    public String getSource() {
+        return source;
     }
 
     @Override

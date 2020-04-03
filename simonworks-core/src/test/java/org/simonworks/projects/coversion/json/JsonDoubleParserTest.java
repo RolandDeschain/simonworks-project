@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JsonDoubleParserTest {
+class JsonDoubleParserTest extends JsonParsersTest {
 
     JsonParser<Double> parser;
 
@@ -41,14 +41,18 @@ class JsonDoubleParserTest {
     }
 
     private void testDouble(String s, double v) throws JsonParseException {
-        JsonReader reader = new JsonCharArrayReader(s);
+        JsonReader reader = getReader(s);
         assertEquals(v, parser.parse(reader));
     }
 
     private void testInvalid(String s) {
-        JsonReader reader = new JsonCharArrayReader(s);
+        JsonReader reader = getReader(s);
         assertThrows(JsonParseException.class,
                 () -> parser.parse(reader));
-        assertEquals(0, reader.index());
+        assertTrue(reader.index() <= 0);
+    }
+
+    JsonReader getReader(String s) {
+        return getJJR_Reader(s);
     }
 }

@@ -8,11 +8,10 @@ package org.simonworks.projects.coversion.json;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.simonworks.projects.conversion.DeserializationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JsonBooleanParserTest {
+class JsonBooleanParserTest extends JsonParsersTest {
 
     JsonParser<Boolean> conv;
 
@@ -51,26 +50,31 @@ class JsonBooleanParserTest {
     }
 
     private void testException(String aString) {
-        JsonReader reader = new JsonCharArrayReader(aString);
+        JsonReader reader = getReader(aString);
         assertThrows(JsonParseException.class,
                 () -> conv.parse(reader));
     }
 
     private void testInvalidValue(String aValue) throws JsonParseException {
-        JsonReader reader = new JsonCharArrayReader(aValue);
+        JsonReader reader = getReader(aValue);
         assertNull(conv.parse(reader));
-        assertEquals(0, reader.index());
+        assertTrue(reader.index() <= 0);
     }
 
     private void testFalse(String aFalse) throws JsonParseException {
-        JsonReader reader = new JsonCharArrayReader(aFalse);
+        JsonReader reader = getReader(aFalse);
         Boolean b = conv.parse(reader);
         assertFalse(b);
     }
 
     private void testTrue(String aTrue) throws JsonParseException {
-        JsonReader reader = new JsonCharArrayReader(aTrue);
+        JsonReader reader = getReader(aTrue);
         Boolean b = conv.parse(reader);
         assertTrue(b);
     }
+
+    JsonReader getReader(String s) {
+        return getJJR_Reader(s);
+    }
+
 }

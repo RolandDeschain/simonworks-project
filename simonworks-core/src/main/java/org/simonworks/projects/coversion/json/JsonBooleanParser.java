@@ -6,8 +6,6 @@
 
 package org.simonworks.projects.coversion.json;
 
-import static org.simonworks.projects.coversion.json.JsonParser.throwsExceptionForUnexpectedToken;
-
 class JsonBooleanParser implements JsonParser<Boolean> {
 
     @Override

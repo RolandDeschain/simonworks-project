@@ -6,6 +6,7 @@
 
 package org.simonworks.projects.coversion.json;
 
+import org.simonworks.projects.annotations.Prototype;
 import org.simonworks.projects.conversion.DeserializationException;
 import org.simonworks.projects.conversion.Deserializer;
 import org.simonworks.projects.domain.ReflectionSupport;
@@ -20,7 +21,13 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class JsonDeserializer<O> implements Deserializer<String, O> {
+/**
+ * {@link Deserializer} implementation for Json Strings
+ * @param <O>
+ *     Generic type to produce after Json String deserialization
+ */
+@Prototype(name = "jsonDeserializer")
+public class JsonDeserializer<O> implements Deserializer<O> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonDeserializer.class);
 
@@ -45,13 +52,23 @@ public class JsonDeserializer<O> implements Deserializer<String, O> {
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("deserialize(json <{}>, Class <{}>)", json, clazz);
         }
+        try {
+            return (O) deserialize(new JsonCharArrayReader(json), clazz);
+        } catch (DeserializationException e) {
+            throw new DeserializationException("Invalid json " + json, e);
+        }
+    }
+
+    public O deserialize(JsonReader reader, Class<O> clazz) throws DeserializationException {
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("deserialize(reader <{}>, Class <{}>)", reader, clazz);
+        }
         O result = null;
-        JsonReader reader = new JsonCharArrayReader(json);
         reader.skipWhiteSpaces();
         try {
             result = (O) readValue(reader, clazz);
         } catch (JsonReadException | JsonParseException e) {
-            throw new DeserializationException("invalid json " + json, e);
+            throw new DeserializationException("Cannot deserialize using reader " + reader, e);
         }
         return result;
     }

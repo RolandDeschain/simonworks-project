@@ -6,6 +6,8 @@
 
 package org.simonworks.projects.coversion.json;
 
+import org.simonworks.projects.domain.Source;
+
 import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -15,7 +17,9 @@ import java.util.function.Predicate;
  *
  * @implSpec  http://www.asciitable.com
  */
-public interface JsonReader {
+public interface JsonReader extends Source<String> {
+
+    IntPredicate untilEnd = i -> i!=-1;
 
     IntPredicate whiteSpaces = Character::isWhitespace;
 

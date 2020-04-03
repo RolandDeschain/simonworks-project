@@ -20,7 +20,7 @@ public class ExampleWebResource {
 
     private List<ExampleBean> repo = new ArrayList<>();
 
-    private class ExampleBean {
+    class ExampleBean {
         String name;
         ExampleBean(String name) { this.name = name; }
     }
@@ -35,7 +35,7 @@ public class ExampleWebResource {
     @MethodMapping(
             path = "/examples/{name}"
     )
-    public List<ExampleBean> getByNameOrPrefix(
+    public @Serialize(serializerName = "jsonSerializer") List<ExampleBean> getByNameOrPrefix(
             @PathParam("name") String name,
             @QueryParam("prefix") String prefix) {
         return StreamSupport
@@ -47,7 +47,8 @@ public class ExampleWebResource {
     @MethodMapping(
         verb = HttpVerb.POST
     )
-    public void insert(ExampleBean example) {
+    public void insert(
+            @Deserialize(deserializerName = "jsonDeserializer") ExampleBean example) {
         repo.add(example);
     }
 

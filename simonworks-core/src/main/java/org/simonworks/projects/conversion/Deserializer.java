@@ -6,8 +6,27 @@
 
 package org.simonworks.projects.conversion;
 
-public interface Deserializer<I, O> {
+/**
+ * This interface's instances represents a deserialization process (or transformation) from a {@link String}
+ * to a generic type.
+ *
+ * @param <O>
+ *     The generic type this {@link Deserializer} is able to produce.
+ */
+public interface Deserializer<O> {
 
-    O deserialize(I input, Class<O> clazz) throws DeserializationException;
+    /**
+     * Deserializes the input {@link String} into an object identified by input {@link Class} parameter.
+     *
+     * @param input
+     *  Source String to transform.
+     * @param clazz
+     *  The class of the output object to produce.
+     * @return
+     *  An instance of the {@link Class} provided in input.
+     * @throws DeserializationException
+     *  If any exception occurs during this process.
+     */
+    O deserialize(String input, Class<O> clazz) throws DeserializationException;
 
 }

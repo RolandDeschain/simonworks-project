@@ -1,7 +1,7 @@
 
-µ
-java:S1130"íRemove the declaration of thrown exception 'org.simonworks.projects.coversion.json.JsonParseException', as it cannot be thrown from method's body.(‘˙§ﬁ¸ˇˇˇˇ8≤Ω—µë.
 Ø
-java:S1130!"íRemove the declaration of thrown exception 'org.simonworks.projects.coversion.json.JsonParseException', as it cannot be thrown from method's body.(ÿ•∫k8πúÀµë.
+java:S1130"íRemove the declaration of thrown exception 'org.simonworks.projects.coversion.json.JsonParseException', as it cannot be thrown from method's body.(ÿ•∫k8πúÀµë.
+µ
+java:S1130"íRemove the declaration of thrown exception 'org.simonworks.projects.coversion.json.JsonParseException', as it cannot be thrown from method's body.(‘˙§ﬁ¸ˇˇˇˇ8≤Ω—µë.
 J
-java:S2447)"-Null is returned but a "Boolean" is expected.(•πÔç8çå µë.
+java:S2447'"-Null is returned but a "Boolean" is expected.(•πÔç8çå µë.

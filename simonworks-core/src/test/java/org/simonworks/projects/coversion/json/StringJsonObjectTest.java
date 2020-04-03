@@ -41,20 +41,20 @@ class StringJsonObjectTest {
 //            System.out.println("SimonWorks avg time = " + (amount/50));
 //        }
 //
-//        {
-//            long amount = 0L;
-//            for (int i = 0; i < 500; i++) {
-//                try {
-//                    long start = System.currentTimeMillis();
-//                    Gson gson = new Gson();
-//                    SimpleBean simple2 = gson.fromJson(json, SimpleBean.class);
-//                    amount += System.currentTimeMillis() - start;
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            System.out.println("Gson avg time = " + (amount / 50));
-//        }
+        {
+            long amount = 0L;
+            for (int i = 0; i < 500; i++) {
+                try {
+                    long start = System.currentTimeMillis();
+                    Gson gson = new Gson();
+                    SimpleBean simple2 = gson.fromJson(json, SimpleBean.class);
+                    amount += System.currentTimeMillis() - start;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("Gson avg time = " + (amount / 50));
+        }
 
         {
             long amount = 0L;

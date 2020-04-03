@@ -8,11 +8,10 @@ package org.simonworks.projects.coversion.json;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.simonworks.projects.conversion.DeserializationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JsonStringParserTest {
+class JsonStringParserTest extends JsonParsersTest {
 
     JsonParser<String> conv;
 
@@ -49,15 +48,19 @@ class JsonStringParserTest {
     }
 
     void testString(String aString, String expected) throws JsonParseException {
-        JsonReader reader = new JsonCharArrayReader(aString);
+        JsonReader reader = getReader(aString);
         String result = conv.parse(reader);
         assertEquals(expected, result);
     }
 
     void testInvalidString(String aString) {
-        JsonReader reader = new JsonCharArrayReader(aString);
+        JsonReader reader = getReader(aString);
         assertThrows(JsonParseException.class,
                 () -> conv.parse(reader));
-        assertEquals(0, reader.index());
+        assertTrue(reader.index() <= 0);
+    }
+
+    JsonReader getReader(String s) {
+        return getJJR_Reader(s);
     }
 }

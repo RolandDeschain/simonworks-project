@@ -6,9 +6,11 @@
 
 package org.simonworks.projects.coversion.json;
 
+import org.simonworks.projects.annotations.Prototype;
 import org.simonworks.projects.conversion.Serializer;
 
-public class JsonSerializer implements Serializer {
+@Prototype(name = "jsonDeserializer")
+public class JsonSerializer implements Serializer<Object> {
 
     @Override
     public String serialize(Object input) {

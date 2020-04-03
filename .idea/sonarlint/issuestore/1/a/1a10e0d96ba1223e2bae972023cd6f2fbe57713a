@@ -1,3 +1,5 @@
 
-dsquid:S1075"ARefactor your code to get this URI from a customizable parameter.(Óƒ“ıÿÿÿÿ8©›Õ….
-[squid:UselessImportCheck"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8²›ÀŠ.
+M
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8µÙ­×’.
+c
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(Óƒ“ıÿÿÿÿ8µÙ­×’.

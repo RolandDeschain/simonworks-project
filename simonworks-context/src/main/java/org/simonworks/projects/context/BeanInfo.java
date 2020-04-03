@@ -6,6 +6,7 @@ import org.simonworks.projects.context.annotation.CompleteSetup;
 import org.simonworks.projects.context.annotation.Dependency;
 import org.simonworks.projects.context.annotation.InjectBeanContext;
 import org.simonworks.projects.utils.StringUtils;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -48,6 +49,7 @@ class BeanInfo {
 
     protected void fromClass(Class<?> clazz) {
         this.beanClass = Objects.requireNonNull(clazz, "Bean class cannot be null");
+        ApplicationContext ctx;
     }
 
     protected Lifecycle initLifecycle() {
