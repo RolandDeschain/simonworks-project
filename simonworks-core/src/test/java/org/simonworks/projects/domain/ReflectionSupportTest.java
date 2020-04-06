@@ -8,13 +8,12 @@ package org.simonworks.projects.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.simonworks.projects.coversion.SimpleBean;
+import org.simonworks.projects.conversion.SimpleBean;
+import org.simonworks.projects.reflection.ReflectionSupport;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ReflectionSupportTest {
 

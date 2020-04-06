@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
+
+package org.simonworks.projects.conversion.json;
+
+import org.junit.jupiter.api.Test;
+import org.simonworks.projects.utils.AssertionError;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class JsonStringValueTest {
+
+    @Test
+    void testToString() {
+        String s = "Simone";
+        JsonElement<String> string = JsonValue.jsonString(s);
+        assertEquals("Simone", string.getRepresentedValue());
+        assertEquals("\"Simone\"", string.toString());
+    }
+
+    @Test
+    void testNullValue_thanException() {
+        assertThrows(AssertionError.class, () -> JsonValue.jsonString(null));
+    }
+}

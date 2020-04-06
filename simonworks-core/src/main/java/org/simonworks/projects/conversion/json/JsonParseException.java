@@ -4,22 +4,25 @@
  *
  */
 
-package org.simonworks.projects.domain;
+/*
+ * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
+ *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ *
+ */
 
-import org.simonworks.projects.reflection.ReflectionSupport;
+package org.simonworks.projects.conversion.json;
 
 /**
- * Exception raised by {@link ReflectionSupport} if any problem occurs during its {@link ReflectionSupport#writeValue(Object, String, Object)}
- * method's execution
+ * Exception raised by {@link JsonParser} in case won't be possible to properly parse from {@link JsonReader}
  */
-public class NotWritableFieldException extends RuntimeException {
+public class JsonParseException extends Exception {
 
     /**
      * Constructs a new runtime exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public NotWritableFieldException() {
+    public JsonParseException() {
     }
 
     /**
@@ -30,7 +33,7 @@ public class NotWritableFieldException extends RuntimeException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NotWritableFieldException(String message) {
+    public JsonParseException(String message) {
         super(message);
     }
 
@@ -48,7 +51,7 @@ public class NotWritableFieldException extends RuntimeException {
      *                unknown.)
      * @since 1.4
      */
-    public NotWritableFieldException(String message, Throwable cause) {
+    public JsonParseException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -65,7 +68,7 @@ public class NotWritableFieldException extends RuntimeException {
      *              unknown.)
      * @since 1.4
      */
-    public NotWritableFieldException(Throwable cause) {
+    public JsonParseException(Throwable cause) {
         super(cause);
     }
 }

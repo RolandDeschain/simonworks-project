@@ -12,15 +12,12 @@
 package org.simonworks.projects.context;
 
 import org.simonworks.projects.context.annotation.Dependency;
-import org.simonworks.projects.domain.ReflectionSupport;
-import org.simonworks.projects.domain.MethodInvocationException;
+import org.simonworks.projects.reflection.ReflectionSupport;
 import org.simonworks.projects.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 public class DefaultBeanContext extends AbstractBeanContext {

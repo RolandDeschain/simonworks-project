@@ -5,8 +5,7 @@
 
 package org.simonworks.projects.context;
 
-import org.simonworks.projects.domain.ReflectionSupport;
-import org.simonworks.projects.domain.MethodInvocationException;
+import org.simonworks.projects.reflection.ReflectionSupport;
 import org.simonworks.projects.factory.BeanFactory;
 import org.simonworks.projects.factory.DefaultBeanFactory;
 import org.simonworks.projects.utils.Assertions;
