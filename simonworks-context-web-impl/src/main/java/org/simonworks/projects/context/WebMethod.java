@@ -6,6 +6,9 @@
 
 package org.simonworks.projects.context;
 
+import org.simonworks.projects.context.annotations.Deserialize;
+import org.simonworks.projects.conversion.Deserializer;
+import org.simonworks.projects.conversion.Serializer;
 import org.simonworks.projects.utils.CollectionUtils;
 
 import java.lang.reflect.Method;
@@ -18,6 +21,7 @@ public class WebMethod {
     private String exposedName;
     private List<WebParam> pathParams;
     private List<WebParam> queryParams;
+    private Serializer outputSerializer;
 
     public WebMethod(Method underlyingMethod) {
         this.underlyingMethod = underlyingMethod;
@@ -51,6 +55,7 @@ public class WebMethod {
         private boolean isPathParam;
         private Class<?> type;
         private int ordinal;
+        private Deserializer inputDeserializer;
 
         private WebParam(String paramName, Class<?> type, int ordinal) {
             this.paramName = paramName;
@@ -61,14 +66,18 @@ public class WebMethod {
         public static WebParam queryParam(String paramName, Class<?> type, int ordinal) {
             WebParam wp = new WebParam(paramName, type, ordinal);
             wp.isQueryParam = true;
-            wp.isPathParam = false;
             return wp;
         }
 
         public static WebParam pathParam(String paramName, Class<?> type, int ordinal) {
             WebParam wp = new WebParam(paramName, type, ordinal);
-            wp.isQueryParam = false;
             wp.isPathParam = true;
+            return wp;
+        }
+
+        public static <T> WebParam body(Deserializer deserializer, Class<T> type) {
+            WebParam wp = new WebParam("body", type, 1);
+            wp.inputDeserializer = deserializer;
             return wp;
         }
 
@@ -90,6 +99,10 @@ public class WebMethod {
 
         public boolean isQueryParam() {
             return isQueryParam;
+        }
+
+        public Deserializer getInputDeserializer() {
+            return inputDeserializer;
         }
 
         @Override

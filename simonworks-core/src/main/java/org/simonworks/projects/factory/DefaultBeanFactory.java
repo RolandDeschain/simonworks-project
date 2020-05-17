@@ -5,6 +5,7 @@
 
 package org.simonworks.projects.factory;
 
+import org.simonworks.projects.reflection.Typed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,11 @@ public class DefaultBeanFactory implements BeanFactory {
         } catch (ClassNotFoundException e) {
             throw new BeanCreationException("Cannot create object " + qualifiedName, e);
         }
+    }
+
+    @Override
+    public <T> T create(Typed<T> type) {
+        return (T) create(type.getRawType());
     }
 
     @Override

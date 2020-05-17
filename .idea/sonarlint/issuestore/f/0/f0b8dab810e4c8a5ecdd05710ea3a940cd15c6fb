@@ -1,5 +1,5 @@
 
-I
-java:S1128"-Remove this unused import 'org.slf4j.Logger'.(íØ®68öØ­×’.
 Q
-java:S1128"4Remove this unused import 'org.slf4j.LoggerFactory'.(–ÿÚŞ8öØ­×’.
+java:S1128"4Remove this unused import 'org.slf4j.LoggerFactory'.(–ÿÚŞ8öØ­×’.
+I
+java:S1128"-Remove this unused import 'org.slf4j.Logger'.(íØ®68öØ­×’.

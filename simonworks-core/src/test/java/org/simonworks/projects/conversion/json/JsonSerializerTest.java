@@ -12,6 +12,8 @@
 
 package org.simonworks.projects.conversion.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +35,7 @@ class JsonSerializerTest {
     }
 
     @Test
-    void serialize() throws DeserializationException {
+    void serialize() throws DeserializationException, JsonProcessingException {
 
         List<SimpleBean> list = new ArrayList<>();
         list.add(new SimpleBean("Cars", "10", 25.7, false));
@@ -49,6 +51,9 @@ class JsonSerializerTest {
 
         List<? extends SimpleBean> deserialize = des.deserialize(json, (Class<List<? extends SimpleBean>>) list.getClass());
         System.out.println(deserialize);
+
+        ObjectMapper om = new ObjectMapper();
+        om.readValue(json, list.getClass());
 
     }
 }

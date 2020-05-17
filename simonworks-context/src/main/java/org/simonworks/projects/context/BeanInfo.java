@@ -5,6 +5,7 @@ import org.simonworks.projects.annotations.Singleton;
 import org.simonworks.projects.context.annotation.CompleteSetup;
 import org.simonworks.projects.context.annotation.Dependency;
 import org.simonworks.projects.context.annotation.InjectBeanContext;
+import org.simonworks.projects.reflection.Typed;
 import org.simonworks.projects.utils.StringUtils;
 import org.springframework.context.ApplicationContext;
 
@@ -18,7 +19,7 @@ class BeanInfo {
 
     private List<String> aliases;
 
-    private Class<?> beanClass;
+    private Typed<?> type;
 
     /**
      * Map of bean dependencies. key is the name of a dependency bean, value if the metadata annotation
@@ -40,21 +41,16 @@ class BeanInfo {
         PROTOTYPE
     }
 
-    BeanInfo(Class<?> clazz) {
-        fromClass(clazz);
+    BeanInfo(Typed<?> type) {
+        this.type = Objects.requireNonNull(type, "Bean class cannot be null");
         lifecycle = initLifecycle();
         initAliases();
         checkDependencies();
     }
 
-    protected void fromClass(Class<?> clazz) {
-        this.beanClass = Objects.requireNonNull(clazz, "Bean class cannot be null");
-        ApplicationContext ctx;
-    }
-
     protected Lifecycle initLifecycle() {
         Lifecycle result = null;
-        if (beanClass.isAnnotationPresent(Singleton.class)) {
+        if (type.getRawType().isAnnotationPresent(Singleton.class)) {
             result = BeanInfo.Lifecycle.SINGLETON;
         } else {
             result = BeanInfo.Lifecycle.PROTOTYPE;
@@ -71,11 +67,11 @@ class BeanInfo {
 
     protected List<String> resolveBeanAliasesUsingAnnotations() {
         List<String> result = new ArrayList<>();
-        Prototype prototype = beanClass.getAnnotation(Prototype.class);
+        Prototype prototype = type.getRawType().getAnnotation(Prototype.class);
         if(prototype != null) {
             result.add(prototype.name());
         } else {
-            Singleton singleton = beanClass.getAnnotation(Singleton.class);
+            Singleton singleton = type.getRawType().getAnnotation(Singleton.class);
             if(singleton != null && StringUtils.isNotEmpty(singleton.name())) {
                 result.add(singleton.name());
             }
@@ -85,7 +81,7 @@ class BeanInfo {
 
     private List<String> resolveBeanAliasesUsingClassName() {
         List<String> result = new ArrayList<>();
-        String name = beanClass.getName();
+        String name = type.getRawType().getName();
         name = name.substring(name.lastIndexOf('.') + 1);
         char[] chars = name.toCharArray();
         StringJoiner joiner = new StringJoiner("");
@@ -102,19 +98,19 @@ class BeanInfo {
 
     private void checkDependencies() {
         dependencies = Arrays
-                .stream(beanClass.getDeclaredFields())
+                .stream(type.getRawType().getDeclaredFields())
                 .filter(field ->
                         field.isAnnotationPresent(Dependency.class))
                 .collect(Collectors.toMap(Function.identity(), field -> field.getAnnotation(Dependency.class)));
 
         injectableBeanContext = Arrays
-                .stream(beanClass.getDeclaredFields())
+                .stream(type.getRawType().getDeclaredFields())
                 .filter(f ->
                         f.isAnnotationPresent(InjectBeanContext.class))
                 .findAny().orElse(null);
 
         completeSetup = Arrays
-                .stream(beanClass.getDeclaredMethods())
+                .stream(type.getRawType().getDeclaredMethods())
                 .filter(m ->
                         m.isAnnotationPresent(CompleteSetup.class))
                 .findAny().orElse(null);
@@ -124,8 +120,8 @@ class BeanInfo {
         return aliases;
     }
 
-    Class<?> getBeanClass() {
-        return beanClass;
+    public Typed<?> getType() {
+        return type;
     }
 
     Map<Field, Dependency> getDependencies() {
@@ -148,7 +144,7 @@ class BeanInfo {
     public String toString() {
         return new StringJoiner(", ", BeanInfo.class.getSimpleName() + "[", "]")
                 .add("aliases=" + aliases + "'")
-                .add("beanClass=" + beanClass)
+                .add("type=" + type)
                 .add("dependencies=" + dependencies)
                 .add("lifecycle=" + lifecycle)
                 .toString();

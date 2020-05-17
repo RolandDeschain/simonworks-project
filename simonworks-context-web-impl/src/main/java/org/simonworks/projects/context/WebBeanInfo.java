@@ -7,6 +7,7 @@
 package org.simonworks.projects.context;
 
 import org.simonworks.projects.context.annotations.*;
+import org.simonworks.projects.reflection.Typed;
 import org.simonworks.projects.utils.Assertions;
 import org.simonworks.projects.utils.CollectionUtils;
 import org.slf4j.Logger;
@@ -34,13 +35,13 @@ public class WebBeanInfo extends BeanInfo {
 
     private Map<HttpVerb, List<org.simonworks.projects.context.WebMethod>> webMethodMappings;
 
-    WebBeanInfo(Class<?> clazz, WebResourceProcessor webResourceProcessor) {
-        super(clazz);
+    WebBeanInfo(Typed<?> type, WebResourceProcessor webResourceProcessor) {
+        super(type);
         if(LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Creating web bean info for class <{}>", clazz);
+            LOGGER.debug("Creating web bean info for class <{}>", type.getRawType());
         }
         Assertions.assertNotNull(webResourceProcessor, "Web resource processor cannot be null");
-        this.webResource = clazz.getAnnotation(WebResource.class);
+        this.webResource = type.getAnnotation(WebResource.class);
         if( webResource != null ) {
             this.version = requireNonNull(webResource.version(), "Version cannot be null");
             webResourcePath = webResourceProcessor.mapWebResourcePath(webResource);
@@ -80,7 +81,7 @@ public class WebBeanInfo extends BeanInfo {
 
     private void extractMethodAnnotations(WebResourceProcessor webResourceProcessor) {
         webMethodMappings = Arrays
-                .stream(super.getBeanClass().getMethods())
+                .stream(super.getType().getRawType().getMethods())
                 .filter(method -> method.isAnnotationPresent(MethodMapping.class))
                 .collect(Collectors.groupingBy(
                         m -> m.getAnnotation(MethodMapping.class).verb(),

@@ -14,8 +14,15 @@ package org.simonworks.projects.reflection;
 
 import org.simonworks.projects.domain.MethodInvocationException;
 import org.simonworks.projects.domain.NotWritableFieldException;
+import org.simonworks.projects.utils.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.factory.CoreReflectionFactory;
+import sun.reflect.generics.factory.GenericsFactory;
+import sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import sun.reflect.generics.reflectiveObjects.WildcardTypeImpl;
+import sun.reflect.generics.scope.ClassScope;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -34,6 +41,8 @@ import static org.simonworks.projects.utils.Assertions.assertNotNull;
 public class ReflectionSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionSupport.class);
+
+    private ReflectionSupport() {}
 
     public static Object invokeMethod(Object anObject, String method, Object ... params) {
         assertNotNull(anObject, "Object to invoke method on cannot be null!");
@@ -65,11 +74,9 @@ public class ReflectionSupport {
     public static Object invokeMethod(Object anObject, Method m, Object ... params) {
         assertNotNull(anObject, "Object to invoke method on cannot be null!");
         assertNotNull(m, "Method to invoke cannot be null!");
-        boolean accessible = m.isAccessible();
-        if(!accessible) {
-            m.setAccessible(true);
-        }
-        try {
+        try(
+                AccessibleObjectAllower ignored = new AccessibleObjectAllower(m)
+        ) {
             if (params == null) {
                 return m.invoke(anObject);
             } else {
@@ -77,10 +84,6 @@ public class ReflectionSupport {
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new MethodInvocationException("Can't invoke method " + m.getName() + " on class " + anObject.getClass(), e);
-        } finally {
-            if(!accessible) {
-                m.setAccessible(false);
-            }
         }
     }
 
@@ -142,12 +145,10 @@ public class ReflectionSupport {
             }
             return ;
         }
-        boolean accessible = false;
-        try {
-            accessible = f.isAccessible();
-            if( !accessible ) {
-                f.setAccessible(true);
-            }
+        try(
+                AccessibleObjectAllower ignored = new AccessibleObjectAllower(f)
+        ) {
+
             if(f.getType().isPrimitive()) {
                 writePrimitive(f, anObject, value);
             } else {
@@ -155,10 +156,6 @@ public class ReflectionSupport {
             }
         } catch(IllegalAccessException e) {
             throw e;
-        } finally {
-            if( f!= null && !accessible ) {
-                f.setAccessible(accessible);
-            }
         }
     }
 
@@ -194,6 +191,18 @@ public class ReflectionSupport {
 
     public static boolean isWritable(Field f) {
         return !Modifier.isFinal(f.getModifiers());
+    }
+
+    public static boolean isStatic(Class<?> clazz) {
+        return Modifier.isStatic(clazz.getModifiers());
+    }
+
+    public static boolean hasOwner(Class<?> clazz) {
+        return !isTopLevelClass(clazz);
+    }
+
+    public static boolean isTopLevelClass(Class<?> clazz) {
+        return clazz.getEnclosingClass() == null;
     }
 
 }

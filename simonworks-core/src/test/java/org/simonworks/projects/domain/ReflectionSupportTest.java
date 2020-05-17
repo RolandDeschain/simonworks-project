@@ -9,13 +9,23 @@ package org.simonworks.projects.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.simonworks.projects.conversion.SimpleBean;
+import org.simonworks.projects.conversion.UnknownType;
+import org.simonworks.projects.conversion.json.JsonParser;
 import org.simonworks.projects.reflection.ReflectionSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.beans.BeanInfo;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 class ReflectionSupportTest {
+    
+    private static Logger LOGGER = LoggerFactory.getLogger(ReflectionSupportTest.class);
 
     private SimpleBean sb;
 
@@ -23,19 +33,155 @@ class ReflectionSupportTest {
         sb = new SimpleBean();
     }
 
+    @Test <A, B extends ReflectionSupportTest, C> void testClassReflection() {
+//        List<TestIF<SimpleBean[], B, Test>> sb =
+//                new ArrayList<TestIF<SimpleBean[], B, Test>>();
+//        testClass(sb.getClass());
+
+//        LOGGER.debug("###############################");
+//        tabs = 1;
+//
+//        TestIF<SimpleBean[], B, Test> testIf = new TestIF<SimpleBean[], B, Test>() {
+//            @Override
+//            public B process(SimpleBean[] input) {
+//                return null;
+//            }
+//
+//            @Override
+//            public B process(SimpleBean[] input, Test avg) {
+//                return null;
+//            }
+//        };
+//
+//        testClass(testIf.getClass());
+//
+//        LOGGER.debug("###############################");
+//        tabs = 1;
+
+        TestIF<JsonParser<UnknownType>, SimpleBean, Function<String, SimpleBean>> test = new TestImpl<>();
+        testClass(test.getClass());
+    }
+
+
+
+    private static int tabs = 0;
+    private static Type lastType;
+
+    private static String tab() {
+        char[] c = new char[ tabs ];
+        Arrays.fill(c, ' ');
+        return new String(c);
+    }
+
+    private static String spaces() {
+        char[] c = new char[ tabs+4 ];
+        Arrays.fill(c, ' ');
+        return new String(c);
+    }
+
+    public static void print(String s) {
+        LOGGER.debug(s);
+    }
+
+    private void tabOff() {
+        LOGGER.debug("tabOff");
+        tabs--;
+    }
+
+    private void tabOn() {
+        tabs++;
+    }
+
+    private void testClass(Class<?> aClass) {
+        print("Testing class " + aClass);
+        if(aClass.isArray()) {
+            print("isArray");
+        }
+        Class<?> componentType = aClass.getComponentType();
+        if(componentType != null) {
+            print("Component type " + componentType);
+            testClass(componentType);
+        }
+        Type[] genericInterfaces = aClass.getGenericInterfaces();
+        for(Type genericInterface : genericInterfaces) {
+            tabOn();
+            print("Generic interface " +   genericInterface + " of class " + aClass);
+            testType(genericInterface);
+            tabOff();
+        }
+
+        TypeVariable<? extends Class<?>>[] typeParameters = aClass.getTypeParameters();
+        if(typeParameters != null && typeParameters.length > 0) {
+            tabOn();
+            print("Type parameters of class " + aClass + " = " + typeParameters.length +
+                    ", " + Arrays.toString(typeParameters));
+            for(TypeVariable<? extends Class<?>> tv : typeParameters) {
+                testVariable(tv);
+            }
+            tabOff();
+        }
+    }
+
+    private void testVariable(TypeVariable<?> typeVariable) {
+        print("tv Class " + typeVariable.getClass() + " " + typeVariable.getName());
+        if (typeVariable.getBounds().length == 0) {
+            print("No bounds");
+        } else {
+            testTypes(typeVariable.getBounds());
+        }
+        GenericDeclaration genericDeclaration = typeVariable.getGenericDeclaration();
+        System.out.println("gen declaration " + genericDeclaration);
+    }
+
+    private void testType(Type type) {
+        tabOn();
+        if(type != null ) {
+            print("Type " + type + " of " + type.getClass());
+            if (type instanceof ParameterizedType) {
+                ParameterizedType pt = (ParameterizedType) type;
+                print("pt Class : " + pt.getClass());
+                testType(pt.getRawType());
+                testType(pt.getOwnerType());
+                testTypes(pt.getActualTypeArguments());
+            } else if (type instanceof Class) {
+                print("type is class");
+                testClass((Class<?>) type);
+            } else if (type instanceof TypeVariable) {
+                TypeVariable<?> typeVariable = (TypeVariable<?>) type;
+                testVariable(typeVariable);
+            } else {
+                print(" unknown type " + type);
+            }
+        } else {
+            print("null");
+        }
+        tabOff();
+    }
+
+    private void testTypes(Type ... types) {
+        if(types != null) {
+            for(Type t : types) {
+
+                if(t instanceof Class<?> && (Class<?>)t != Object.class){
+                    testType(t);
+                }
+            }
+        }
+    }
+
     @Test
     void invokeVoidMethod() throws NoSuchMethodException {
         Object r = ReflectionSupport.invokeMethod(sb, "setName", "Simone");
-        System.out.println(r);
+        LOGGER.debug(String.valueOf(r));
         r = ReflectionSupport.invokeMethod(sb, "setName", "Simone");
-        System.out.println(r);
+        LOGGER.debug(String.valueOf(r));
 
         for(Method m : SimpleBean.class.getMethods()) {
-            System.out.println(m.getName());
+            LOGGER.debug(m.getName());
         }
 
         Method m = SimpleBean.class.getMethod("setBoolField", boolean.class);
-        System.out.println(m.getReturnType());
+        LOGGER.debug(m.getReturnType().toString());
     }
 
     private interface TestIF<I, O, A> {
@@ -43,7 +189,7 @@ class ReflectionSupportTest {
         O process(I input, A avg);
     }
 
-    private class TestImpl<R> implements TestIF<R, SimpleBean, Function<String, SimpleBean>> {
+    private class TestImpl<R extends JsonParser> implements TestIF<R, SimpleBean, Function<String, SimpleBean>> {
 
         @Override
         public SimpleBean process(R input) {
@@ -57,9 +203,6 @@ class ReflectionSupportTest {
     }
 
     @Test <G> void testTypes() {
-        // SimpleBean sb = new SimpleBean();
-        // Class<? extends SimpleBean> aClass = sb.getClass();
-        // printType((Type) aClass);
         printType((Type) TestImpl.class);
         G[] genericArray = newArray(TestIF.class);
         printType((Type) genericArray.getClass());
@@ -77,7 +220,7 @@ class ReflectionSupportTest {
 
     void printType(Type type) {
         if(!"java.lang.Object".equals(type.getTypeName())) {
-            System.out.println(type.getTypeName());
+            LOGGER.debug(type.getTypeName());
 
             if (type instanceof GenericArrayType) {
                 printType((GenericArrayType) type);
@@ -95,30 +238,30 @@ class ReflectionSupportTest {
 
     void printType(Class<?> c) {
         if(Object.class != c) {
-            System.out.println("Class");
-            System.out.println(c);
+            LOGGER.debug("Class");
+            LOGGER.debug(c.toString());
             printType((AnnotatedElement) c);
             printType((GenericDeclaration) c);
         }
     }
 
     void printType(GenericArrayType gat) {
-        System.out.println("GenericArrayType.getGenericComponentType");
+        LOGGER.debug("GenericArrayType.getGenericComponentType");
         printType(gat.getGenericComponentType());
     }
 
     void printType(ParameterizedType pt) {
-        System.out.println("ParameterizedType.getActualTypeArguments");
+        LOGGER.debug("ParameterizedType.getActualTypeArguments");
         printType(pt.getActualTypeArguments());
-        System.out.println("ParameterizedType.OwnerType");
+        LOGGER.debug("ParameterizedType.OwnerType");
         printType(pt.getOwnerType());
-        System.out.println("ParameterizedType.RawType");
+        LOGGER.debug("ParameterizedType.RawType");
         printType(pt.getRawType());
     }
 
     void printType(TypeVariable<?>[] typeVariables) {
         if (typeVariables.length != 0) {
-            System.out.println("TypeVariables");
+            LOGGER.debug("TypeVariables");
             for (TypeVariable<?> tv : typeVariables) {
                 printType(tv);
             }
@@ -126,18 +269,18 @@ class ReflectionSupportTest {
     }
 
     void printType(TypeVariable<?> tv) {
-        System.out.println("TypeVariable " + tv.toString() );
-        System.out.println("Typevariable name " + tv.getName());
-         System.out.println("TypeVariable.AnnotatedBounds");
+        LOGGER.debug("TypeVariable " + tv.toString() );
+        LOGGER.debug("Typevariable name " + tv.getName());
+         LOGGER.debug("TypeVariable.AnnotatedBounds");
          printType( tv.getAnnotatedBounds() );
-         System.out.println("TypeVariable.Bounds");
+         LOGGER.debug("TypeVariable.Bounds");
          printType(tv.getBounds());
         // printType(tv.getGenericDeclaration());
         printType((AnnotatedElement) tv);
     }
 
     void printType(GenericDeclaration gd) {
-        System.out.println("GenericDeclaration");
+        LOGGER.debug("GenericDeclaration");
         printType( gd.getTypeParameters() );
     }
 
@@ -148,20 +291,20 @@ class ReflectionSupportTest {
     }
 
     void printType(AnnotatedElement ae) {
-        System.out.println("AnnotatedElement");
+        LOGGER.debug("AnnotatedElement");
         printType( ae.getAnnotations() );
         printType( ae.getDeclaredAnnotations() );
     }
 
     void printType(AnnotatedType at) {
-        System.out.println("AnnotatedType");
+        LOGGER.debug("AnnotatedType");
         printType(at.getType());
         printType((AnnotatedElement) at);
     }
 
     void printType(Annotation[] annotations) {
         if(annotations.length != 0) {
-            System.out.println("Annotations");
+            LOGGER.debug("Annotations");
             for (Annotation a : annotations) {
                 printType(a);
             }
@@ -169,7 +312,7 @@ class ReflectionSupportTest {
     }
 
     void printType(Annotation a) {
-        System.out.println("Annotation");
+        LOGGER.debug("Annotation");
         printType(a.annotationType());
     }
 

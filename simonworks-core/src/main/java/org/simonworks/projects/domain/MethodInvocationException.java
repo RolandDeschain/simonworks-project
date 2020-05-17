@@ -13,7 +13,7 @@
 package org.simonworks.projects.domain;
 
 /**
- * Exception raised during a method invokation if any problem occurs
+ * Exception raised during a method invocation if any problem occurs
  */
 public class MethodInvocationException extends RuntimeException {
 

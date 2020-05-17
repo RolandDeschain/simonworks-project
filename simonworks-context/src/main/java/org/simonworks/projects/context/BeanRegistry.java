@@ -5,9 +5,15 @@
 
 package org.simonworks.projects.context;
 
+import org.simonworks.projects.reflection.Typed;
+
 public interface BeanRegistry {
 
-    void registerBean(Class<?> clazz);
+    default void registerBean(Class<?> clazz) {
+        registerBean(new Typed<>(clazz));
+    }
+
+    void registerBean(Typed<?> type);
 
     void unregisterBean(String name);
 

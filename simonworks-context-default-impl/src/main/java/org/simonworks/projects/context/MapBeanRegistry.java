@@ -8,6 +8,7 @@ package org.simonworks.projects.context;
 
 import org.simonworks.projects.annotations.Prototype;
 import org.simonworks.projects.annotations.Singleton;
+import org.simonworks.projects.reflection.Typed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +25,9 @@ class MapBeanRegistry implements BeanRegistry {
     private Map<String, BeanInfo> registry = new ConcurrentHashMap<>(256);
 
     @Override
-    public void registerBean(Class<?> clazz) {
-        if(isDiscoverableClass(clazz)) {
-            BeanInfo info = createBeanInfo(clazz);
+    public void registerBean(Typed<?> type) {
+        if(isDiscoverableClass(type)) {
+            BeanInfo info = createBeanInfo(type);
             assertNotNull(info, "Cannot register null bean info");
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Registering aliases {} for bean info <{}>", info.aliases(), info);
@@ -35,12 +36,12 @@ class MapBeanRegistry implements BeanRegistry {
         }
     }
 
-    protected boolean isDiscoverableClass(Class<?> clazz) {
-        return clazz.isAnnotationPresent(Prototype.class) || clazz.isAnnotationPresent(Singleton.class);
+    protected boolean isDiscoverableClass(Typed<?> type) {
+        return type.isAnnotationPresent(Prototype.class) || type.isAnnotationPresent(Singleton.class);
     }
 
-    public BeanInfo createBeanInfo(Class<?> clazz) {
-        return new BeanInfo(clazz);
+    public BeanInfo createBeanInfo(Typed<?> type) {
+        return new BeanInfo(type);
     }
 
     @Override

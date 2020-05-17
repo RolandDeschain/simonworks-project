@@ -95,11 +95,9 @@ class WebBeanInfoTest {
             throw new RuntimeException("Deserialization not supported");
         }
 
-
-
         if(m.getAnnotatedReturnType().isAnnotationPresent(Serialize.class)) {
             Serialize ser = m.getAnnotatedReturnType().getAnnotation(Serialize.class);
-            System.out.println(m.getAnnotatedReturnType().getType());
+            System.out.println("Serializing " + m.getAnnotatedReturnType().getType());
             Type type = m.getAnnotatedReturnType().getType();
             System.out.println(type.getTypeName());
 

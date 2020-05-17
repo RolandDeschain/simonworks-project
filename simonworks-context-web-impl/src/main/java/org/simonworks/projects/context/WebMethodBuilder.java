@@ -44,6 +44,9 @@ public class WebMethodBuilder {
             }
         }
         result.setExposedName(exposedName.toString());
+
+        //if(underlyingMethod.getAnnotatedReturnType())
+
         return result;
     }
 

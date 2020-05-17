@@ -6,19 +6,11 @@
 
 package org.simonworks.projects.conversion;
 
-import org.simonworks.projects.domain.DataMapper;
-
 /**
- * Object able to serialize an Object into a String
- * @param <I>
- *     The type of Object to serialize
+ * Object able to serialize an Object into a String.
  */
-public interface Serializer<I> extends DataMapper<I, String> {
+public interface Serializer {
 
-    String serialize(I input);
+    <I> String serialize(I input);
 
-    @Override
-    default String map(I i) {
-        return serialize(i);
-    }
 }

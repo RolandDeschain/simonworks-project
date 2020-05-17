@@ -7,6 +7,7 @@
 package org.simonworks.projects.context;
 
 import org.simonworks.projects.context.annotations.WebResource;
+import org.simonworks.projects.reflection.Typed;
 import org.simonworks.projects.utils.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +17,14 @@ public class WebBeanRegistry extends MapBeanRegistry {
     private WebResourceProcessor webResourceProcessor;
 
     @Override
-    protected boolean isDiscoverableClass(Class<?> clazz) {
-        return super.isDiscoverableClass(clazz) || clazz.isAnnotationPresent(WebResource.class);
+    protected boolean isDiscoverableClass(Typed<?> type) {
+        return super.isDiscoverableClass(type) || type.isAnnotationPresent(WebResource.class);
     }
 
     @Override
-    public WebBeanInfo createBeanInfo(Class<?> clazz) {
+    public WebBeanInfo createBeanInfo(Typed<?> type) {
         Assertions.assertNotNull(webResourceProcessor, "Web Resource processor cannot be null!");
-        return new WebBeanInfo(clazz, webResourceProcessor);
+        return new WebBeanInfo(type, webResourceProcessor);
     }
 
     public void setWebResourceProcessor(WebResourceProcessor webResourceProcessor) {

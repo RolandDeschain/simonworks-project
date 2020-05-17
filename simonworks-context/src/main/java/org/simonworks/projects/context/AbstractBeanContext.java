@@ -62,7 +62,7 @@ abstract class AbstractBeanContext implements BeanContext {
             /*
              * Create the only singletons instance
              */
-            result = getBeanFactory().create(beanInfo.getBeanClass());
+            result = getBeanFactory().create(beanInfo.getType());
             if(LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Created singleton bean <{}> with aliases <{}>",
                         result, beanInfo.aliases() );
@@ -83,7 +83,7 @@ abstract class AbstractBeanContext implements BeanContext {
         Object result;/*
          * Simply create a new instance
          */
-        result = getBeanFactory().create(beanInfo.getBeanClass());
+        result = getBeanFactory().create(beanInfo.getType());
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("Created prototype bean <{}> from using info <{}>", result, beanInfo);
         }
