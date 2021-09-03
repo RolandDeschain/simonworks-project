@@ -6,8 +6,12 @@
 
 package org.simonworks.projects.context;
 
+import org.simonworks.projects.reflection.Typed;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Empty registry implementing NullObject Pattern
@@ -30,6 +34,13 @@ class NoopBeanRegistry implements BeanRegistry {
     }
 
     @Override
+    public void registerBean(Typed<?> type) {
+        /**
+         * Do nothing ;-)
+         */
+    }
+
+    @Override
     public void unregisterBean(String name) {
         /**
          * Do nothing ;-)
@@ -39,5 +50,10 @@ class NoopBeanRegistry implements BeanRegistry {
     @Override
     public BeanInfo getBeanInfo(String name) {
         throw new BeanNotExistsException("Bean info for name " + name + " is not available");
+    }
+
+    @Override
+    public Set<String> beanNamesSet() {
+        return new HashSet<>();
     }
 }

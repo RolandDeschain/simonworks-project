@@ -35,13 +35,13 @@ class ResourceAndParameters {
     public static ResourceAndParameters parse(HttpServletRequest request) {
         WebPathIterator it = new WebPathIterator(request.getPathInfo());
         //version
-        Assertions.assertTrue(it.hasNext());
+        Assertions.assertTrue(it.hasNext(), "Resource version not present");
         StringBuilder resourceBuilder = new StringBuilder(it.next());
         //resource
-        Assertions.assertTrue(it.hasNext());
+        Assertions.assertTrue(it.hasNext(), "Resource name not present");
         resourceBuilder.append(it.next());
         //method
-        Assertions.assertTrue(it.hasNext());
+        Assertions.assertTrue(it.hasNext(), "Resource method not present");
         ResourceAndParameters rap = new ResourceAndParameters(resourceBuilder.toString(), it.next());
         while(it.hasNext()) {
             rap.addPathParam(it.next());

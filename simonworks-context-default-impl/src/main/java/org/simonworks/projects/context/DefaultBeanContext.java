@@ -37,7 +37,9 @@ public class DefaultBeanContext extends AbstractBeanContext {
     protected void doHandleBeanAnnotations(Object bean, BeanInfo beanInfo) {
         fillDependencies(bean, beanInfo.getDependencies());
         checkRequiredBeanContext(bean, beanInfo.getInjectableBeanContext());
-        ReflectionSupport.invokeMethod(bean, beanInfo.getCompleteSetup());
+        if(beanInfo.getCompleteSetup() != null) {
+            ReflectionSupport.invokeMethod(bean, beanInfo.getCompleteSetup());
+        }
     }
 
     private void fillDependencies(Object result, Map<Field, Dependency> dependencies) {

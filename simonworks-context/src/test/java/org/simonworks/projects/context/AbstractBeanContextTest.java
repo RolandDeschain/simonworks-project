@@ -9,6 +9,7 @@ package org.simonworks.projects.context;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.simonworks.projects.factory.BeanFactory;
+import org.simonworks.projects.reflection.Typed;
 
 import java.util.Arrays;
 
@@ -40,13 +41,13 @@ class AbstractBeanContextTest {
     }
 
     @Test
-    void getBean() {
+    void testGetBean() {
         assertSame(exampleBean, context.getBean(""));
     }
 
     @Test
     void get() {
-        BeanInfo be = new BeanInfo(ExampleBean.class);
+        BeanInfo be = new BeanInfo(new Typed(ExampleBean.class));
         Object o = context.get(be);
         assertNotNull(o);
     }

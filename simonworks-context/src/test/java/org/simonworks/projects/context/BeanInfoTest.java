@@ -9,6 +9,7 @@ package org.simonworks.projects.context;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.simonworks.projects.reflection.Typed;
 
 import java.util.Arrays;
 
@@ -20,7 +21,7 @@ class BeanInfoTest {
 
     @BeforeEach
     void setUp() {
-        be = new BeanInfo(ExampleBean.class);
+        be = new BeanInfo(new Typed(ExampleBean.class));
     }
 
     @AfterEach
@@ -34,7 +35,7 @@ class BeanInfoTest {
 
     @Test
     void getBeanClass() {
-        assertEquals(ExampleBean.class, be.getBeanClass());
+        assertEquals(ExampleBean.class, be.getType().getRawType());
     }
 
     @Test

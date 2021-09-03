@@ -7,7 +7,7 @@ package org.simonworks.projects.context;
 
 import org.simonworks.projects.reflection.Typed;
 
-public interface BeanRegistry {
+public interface BeanRegistry extends ListableBeans {
 
     default void registerBean(Class<?> clazz) {
         registerBean(new Typed<>(clazz));

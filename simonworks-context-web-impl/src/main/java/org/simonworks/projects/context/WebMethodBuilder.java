@@ -6,6 +6,7 @@
 
 package org.simonworks.projects.context;
 
+import org.simonworks.projects.context.annotations.Deserialize;
 import org.simonworks.projects.context.annotations.MethodMapping;
 import org.simonworks.projects.context.annotations.PathParam;
 import org.simonworks.projects.utils.Assertions;
@@ -71,6 +72,10 @@ public class WebMethodBuilder {
                 if(param.value().equals(m)) {
                     return WebMethod.WebParam.pathParam(param.value(), p.getType(), i);
                 }
+            }
+            if(p.isAnnotationPresent(Deserialize.class)) {
+                Deserialize deser = p.getAnnotation(Deserialize.class);
+                return WebMethod.WebParam.body(deser.deserializerName(), p.getType());
             }
             i++;
         }

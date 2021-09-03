@@ -16,6 +16,7 @@ import org.simonworks.projects.context.DefaultWebBeanContext;
 import org.simonworks.projects.context.WebBeanContext;
 import org.simonworks.projects.context.WebBeanRegistryProvider;
 import org.simonworks.projects.web.RequestProcessor;
+import org.simonworks.projects.web.ResponseProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +33,14 @@ public class SimonWorksContextServlet extends HttpServlet {
     private static final String CANT_PROCESS_REQUEST = "Cant process request. Exception occurred";
 
     private RequestProcessor requestProcessor;
+    private ResponseProcessor responseProcessor;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimonWorksContextServlet.class);
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         String packagesToScan = config.getInitParameter("packagesToScan");
+        packagesToScan += ",org.simonworks.projects.controller";
         String[] packages = packagesToScan.split(",");
         BeanRegistryProvider webProvider = new WebBeanRegistryProvider(packages);
         WebBeanContext beanContext = new DefaultWebBeanContext(webProvider.loadBeanRegistry());
@@ -45,8 +48,9 @@ public class SimonWorksContextServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Object result = requestProcessor.processRequest(req);
-        resp.getOutputStream().print(result.toString());
+        String result = requestProcessor.processRequest(req);
+        resp.getOutputStream().print(result);
+        //responseProcessor.writeResponse(resp, result);
     }
 
     @Override

@@ -6,25 +6,35 @@
 
 package org.simonworks.projects.context;
 
-import org.simonworks.projects.context.annotations.Deserialize;
+import org.simonworks.projects.context.annotations.Serialize;
 import org.simonworks.projects.conversion.Deserializer;
-import org.simonworks.projects.conversion.Serializer;
 import org.simonworks.projects.utils.CollectionUtils;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 public class WebMethod {
 
-    private final Method underlyingMethod;
+    private transient final Method underlyingMethod;
     private String exposedName;
     private List<WebParam> pathParams;
     private List<WebParam> queryParams;
-    private Serializer outputSerializer;
+    private String serializeBehaviour;
 
     public WebMethod(Method underlyingMethod) {
         this.underlyingMethod = underlyingMethod;
+        AnnotatedType annotatedReturnType = underlyingMethod.getAnnotatedReturnType();
+        if(annotatedReturnType != null && annotatedReturnType.isAnnotationPresent(Serialize.class)) {
+            Serialize d = annotatedReturnType.getAnnotation(Serialize.class);
+            if(d != null) {
+                serializeBehaviour = d.serializerName();
+            }
+        }
     }
 
     public void addPathParam(WebParam webParam) {
@@ -49,13 +59,22 @@ public class WebMethod {
         return CollectionUtils.isNotEmpty(pathParams) || CollectionUtils.isNotEmpty(queryParams);
     }
 
+    public String getSerializeBehaviour() {
+        return serializeBehaviour;
+    }
+
+    public boolean isOutputToBeSerialized() {
+        return serializeBehaviour != null;
+    }
+
     public static class WebParam {
         private String paramName;
         private boolean isQueryParam;
         private boolean isPathParam;
-        private Class<?> type;
+        private transient Class<?> type;
         private int ordinal;
-        private Deserializer inputDeserializer;
+        private String deserializeBehaviour;
+        private static final String jsonDeserializer = "jsonDeserializer";
 
         private WebParam(String paramName, Class<?> type, int ordinal) {
             this.paramName = paramName;
@@ -75,9 +94,11 @@ public class WebMethod {
             return wp;
         }
 
-        public static <T> WebParam body(Deserializer deserializer, Class<T> type) {
+        public static <T> WebParam body(String deserializeBehaviour, Class<T> type) {
             WebParam wp = new WebParam("body", type, 1);
-            wp.inputDeserializer = deserializer;
+            if(deserializeBehaviour != null) {
+                wp.deserializeBehaviour = deserializeBehaviour;
+            }
             return wp;
         }
 
@@ -99,10 +120,6 @@ public class WebMethod {
 
         public boolean isQueryParam() {
             return isQueryParam;
-        }
-
-        public Deserializer getInputDeserializer() {
-            return inputDeserializer;
         }
 
         @Override

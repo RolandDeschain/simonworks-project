@@ -13,6 +13,7 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.types.ObjectId;
 import org.simonworks.projects.model.Model;
 import org.simonworks.projects.utils.StringUtils;
 
@@ -55,21 +56,14 @@ public interface MongoCodecSupport<O> extends Codec<O> {
         w.writeEndArray();
     }
 
-    default void handleId(Model<String> model, BsonWriter writer) {
+    default void writeId(Model<String> model, BsonWriter writer) {
         if(StringUtils.isNotEmpty(model.getId())) {
-            writer.writeString("_id", model.getId());
+            writer.writeObjectId("_id", new ObjectId(model.getId()));
         }
     }
 
-    default String handleId(BsonReader bsonReader) {
-        bsonReader.readName();
-        String id = null;
-        try {
-            id = bsonReader.readObjectId().toString();
-        } catch(Exception e) {
-
-            id = bsonReader.readString();
-        }
-        return id;
+    default String readId(BsonReader bsonReader) {
+        String name = bsonReader.readName();
+        return "_id".equals(name) ? bsonReader.readObjectId().toString() : null;
     }
 }

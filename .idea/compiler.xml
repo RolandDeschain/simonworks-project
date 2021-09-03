@@ -6,20 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="simonworks-context-default-impl" />
-        <module name="sample-webapp" />
-        <module name="simonworks-core" />
-        <module name="simonworks-common-jdbc-dao" />
         <module name="simonworks-mysql-dao" />
-        <module name="simonworks-web" />
-        <module name="simonworks-context" />
-        <module name="simonworks-service" />
-        <module name="simonworks-oracle-dao" />
-        <module name="simonworks-dao" />
-        <module name="simonworks-mongo-dao" />
-        <module name="simonworks-model" />
         <module name="simonworks-context-web-impl" />
         <module name="simonworks-controller" />
+        <module name="simonworks-common-jdbc-dao" />
+        <module name="simonworks-dao" />
+        <module name="simonworks-web" />
+        <module name="simonworks-model" />
+        <module name="simonworks-context" />
+        <module name="simonworks-mongo-dao" />
+        <module name="simonworks-oracle-dao" />
+        <module name="simonworks-core" />
+        <module name="simonworks-context-default-impl" />
+        <module name="sample-webapp" />
+        <module name="simonworks-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

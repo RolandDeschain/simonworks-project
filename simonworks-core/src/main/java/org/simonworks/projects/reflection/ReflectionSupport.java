@@ -14,19 +14,15 @@ package org.simonworks.projects.reflection;
 
 import org.simonworks.projects.domain.MethodInvocationException;
 import org.simonworks.projects.domain.NotWritableFieldException;
-import org.simonworks.projects.utils.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.factory.CoreReflectionFactory;
-import sun.reflect.generics.factory.GenericsFactory;
-import sun.reflect.generics.reflectiveObjects.GenericArrayTypeImpl;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-import sun.reflect.generics.reflectiveObjects.WildcardTypeImpl;
-import sun.reflect.generics.scope.ClassScope;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;

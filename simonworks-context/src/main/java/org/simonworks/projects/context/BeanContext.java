@@ -5,7 +5,7 @@
 
 package org.simonworks.projects.context;
 
-public interface BeanContext {
+public interface BeanContext extends ListableBeans{
 
     String getId();
 

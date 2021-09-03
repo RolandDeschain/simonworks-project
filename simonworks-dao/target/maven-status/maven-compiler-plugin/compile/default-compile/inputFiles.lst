@@ -1,8 +1,8 @@
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\domain\AbstractPageable.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\domain\Sort.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\DbService.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\domain\PageImpl.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\DaoSupport.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\DaoException.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\PagingAndSortingDao.java
-C:\simonworks\software\projects\simonworks-project\simonworks-dao\src\main\java\org\simonworks\projects\dao\domain\Pageable.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/PagingAndSortingDao.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/DbService.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/DaoSupport.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/domain/AbstractPageable.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/domain/PageImpl.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/domain/Sort.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/DaoException.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-dao/src/main/java/org/simonworks/projects/dao/domain/Pageable.java

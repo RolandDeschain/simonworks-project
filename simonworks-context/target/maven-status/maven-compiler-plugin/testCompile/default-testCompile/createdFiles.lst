@@ -1,4 +1,4 @@
-org\simonworks\projects\context\AbstractBeanContextTest.class
-org\simonworks\projects\context\BeanInfoTest.class
-org\simonworks\projects\context\ExampleBean.class
-org\simonworks\projects\context\Samples.class
+org/simonworks/projects/context/Samples.class
+org/simonworks/projects/context/BeanInfoTest.class
+org/simonworks/projects/context/ExampleBean.class
+org/simonworks/projects/context/AbstractBeanContextTest.class

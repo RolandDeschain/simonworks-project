@@ -12,6 +12,7 @@ import org.simonworks.projects.context.WebBeanInfo;
 import org.simonworks.projects.context.WebMethod;
 import org.simonworks.projects.context.annotation.InjectBeanContext;
 import org.simonworks.projects.context.annotations.HttpVerb;
+import org.simonworks.projects.conversion.Serializer;
 import org.simonworks.projects.domain.MethodInvocationException;
 import org.simonworks.projects.domain.ReflectionSupport;
 import org.simonworks.projects.utils.CollectionUtils;
@@ -34,7 +35,7 @@ public class InvokableControllerRequestProcessor implements RequestProcessor {
     private WebBeanContext beanContext;
 
     @Override
-    public <T> T processRequest(HttpServletRequest request) {
+    public String processRequest(HttpServletRequest request) {
         ResourceAndParameters resource = ResourceAndParameters.parse(request);
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("Trying to invoke resource <{}>", resource);
@@ -51,15 +52,24 @@ public class InvokableControllerRequestProcessor implements RequestProcessor {
         Objects.nonNull(methodToInvoke);
         if(methodToInvoke != null) {
             Object controller = beanContext.getBean(resource.getResource());
+            Object result = null;
             try {
                 if(methodToInvoke.hasParameters()) {
-                    return (T) ReflectionSupport.invokeMethod(controller, methodToInvoke.getUnderlyingMethod(), prepareCall(
-                            methodToInvoke,
-                            resource,
-                            request.getParameterMap()));
+                    result = ReflectionSupport.invokeMethod(controller, methodToInvoke.getUnderlyingMethod(), prepareCall(
+                                methodToInvoke,
+                                resource,
+                                request.getParameterMap()));
                 } else {
-                    return (T) ReflectionSupport.invokeMethod(controller, methodToInvoke.getUnderlyingMethod());
+                    result = ReflectionSupport.invokeMethod(controller, methodToInvoke.getUnderlyingMethod());
                 }
+                if(methodToInvoke.isOutputToBeSerialized()) {
+                    Serializer serializer = beanContext.getBean(methodToInvoke.getSerializeBehaviour());
+                    if(serializer != null) {
+                        result = serializer.serialize(result);
+                    } else result = String.valueOf(result);
+                }
+
+                return String.valueOf(result);
             } catch (MethodInvocationException e) {
                 LOGGER.error(CANT_PROCESS_REQUEST, e);
             }

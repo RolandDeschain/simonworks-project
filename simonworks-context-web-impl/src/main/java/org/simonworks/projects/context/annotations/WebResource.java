@@ -35,6 +35,13 @@ public @interface WebResource {
     String name();
 
     /**
+     * This {@link WebResource}'s description
+     * @return
+     *  The {@link WebResource}'s description
+     */
+    String description() default "";
+
+    /**
      * The version of this web resource. The version value will be part of the final exposed path before the {@link WebResource#name()} value.
      * @return
      *  The version of this web resource. The version value will be part of the final exposed path before the {@link WebResource#name()} value

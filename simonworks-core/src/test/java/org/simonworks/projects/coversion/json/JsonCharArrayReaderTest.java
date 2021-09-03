@@ -15,11 +15,11 @@ class JsonCharArrayReaderTest {
 
     JsonReader reader;
 
-    @Test
+    //@Test
     void nextChar() {
     }
 
-    @Test
+    //@Test
     void readUntil() {
         JsonObject<SimpleBean> sb = JsonObject.map(new SimpleBean("Simone", "45"));
         String json = sb.toString();

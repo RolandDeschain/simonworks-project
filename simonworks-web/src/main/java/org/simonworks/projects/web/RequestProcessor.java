@@ -13,5 +13,5 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface RequestProcessor {
 
-    <T> T processRequest(HttpServletRequest request);
+    String processRequest(HttpServletRequest request);
 }

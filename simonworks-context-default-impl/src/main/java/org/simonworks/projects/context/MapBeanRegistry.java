@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -68,5 +69,10 @@ class MapBeanRegistry implements BeanRegistry {
             sj.add("\n" + entry.getKey() + " = " + entry.getValue());
         }
         return sj.toString();
+    }
+
+    @Override
+    public Set<String> beanNamesSet() {
+        return registry.keySet();
     }
 }

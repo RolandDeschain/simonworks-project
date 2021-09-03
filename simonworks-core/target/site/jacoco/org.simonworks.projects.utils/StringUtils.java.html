@@ -1,9 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-core</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.utils</a> &gt; <span class="el_source">StringUtils.java</span></div><h1>StringUtils.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-core</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.utils</a> &gt; <span class="el_source">StringUtils.java</span></div><h1>StringUtils.java</h1><pre class="source lang-java linenums">/*
  * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
  * SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package org.simonworks.projects.utils;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class StringUtils {
 
@@ -12,22 +16,30 @@ public final class StringUtils {
     public static final String EMPTY = &quot;&quot;;
 
     public static boolean isEmpty(String s) {
-<span class="fc bfc" id="L15" title="All 4 branches covered.">        return s == null || s.isEmpty();</span>
+<span class="fc bfc" id="L19" title="All 4 branches covered.">        return s == null || s.isEmpty();</span>
     }
 
     public static boolean isNotEmpty(String s) {
-<span class="nc bnc" id="L19" title="All 2 branches missed.">        return !isEmpty(s);</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        return !isEmpty(s);</span>
     }
 
     public static String requireNotEmpty(String s) {
-<span class="nc" id="L23">        return requireNotEmpty(s, &quot;Not empty String is required but &lt;&quot; + s + &quot;&gt; was given&quot;);</span>
+<span class="nc" id="L27">        return requireNotEmpty(s, &quot;Not empty String is required but &lt;&quot; + s + &quot;&gt; was given&quot;);</span>
     }
 
     public static String requireNotEmpty(String s, String message) {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        if(isEmpty(s)) {</span>
-<span class="nc" id="L28">            throw new NullPointerException(message);</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if(isEmpty(s)) {</span>
+<span class="nc" id="L32">            throw new NullPointerException(message);</span>
         }
-<span class="nc" id="L30">        return s;</span>
+<span class="nc" id="L34">        return s;</span>
+    }
+
+    public static Set&lt;Character&gt; charsetOf(String source) {
+<span class="nc" id="L38">        Set&lt;Character&gt; s = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        for(char c : source.toCharArray()) {</span>
+<span class="nc" id="L40">            s.add(c);</span>
+        }
+<span class="nc" id="L42">        return Collections.unmodifiableSet(s);</span>
     }
 
 }

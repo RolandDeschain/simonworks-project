@@ -31,7 +31,7 @@ class DefaultWebBeanContextTest {
         info = context.getBeanRegistry().getBeanInfo("/v1.1.1/examples");
         assertEquals(info.getClass(), WebBeanInfo.class);
         WebBeanInfo wInfo = (WebBeanInfo) info;
-        assertTrue(wInfo.getBeanClass().equals(ExampleWebResource.class));
+        assertTrue(wInfo.getType().getRawType().equals(ExampleWebResource.class));
         ExampleWebResource example = context.getBean("examplesWebResource");
         assertNotNull(example);
         ExampleWebResource example2 = context.getBean("examplesWebResource");

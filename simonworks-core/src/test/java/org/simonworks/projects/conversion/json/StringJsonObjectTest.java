@@ -25,7 +25,7 @@ import java.util.List;
 
 class StringJsonObjectTest {
 
-    @Test
+    //@Test
     void deserialize() throws IOException {
 
         List<SimpleBean> list = new ArrayList<>();

@@ -29,9 +29,11 @@ public class WebBeanInfo extends BeanInfo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebBeanInfo.class);
 
-    private Version version;
-    private WebResource webResource;
     private String webResourcePath;
+    private String webResourceDescription;
+    private int majorVersion = -1;
+    private int minorVersion = -1;
+    private int patchVersion = -1;
 
     private Map<HttpVerb, List<org.simonworks.projects.context.WebMethod>> webMethodMappings;
 
@@ -41,13 +43,21 @@ public class WebBeanInfo extends BeanInfo {
             LOGGER.debug("Creating web bean info for class <{}>", type.getRawType());
         }
         Assertions.assertNotNull(webResourceProcessor, "Web resource processor cannot be null");
-        this.webResource = type.getAnnotation(WebResource.class);
+        WebResource webResource = type.getAnnotation(WebResource.class);
         if( webResource != null ) {
-            this.version = requireNonNull(webResource.version(), "Version cannot be null");
+            Version version = requireNonNull(webResource.version(), "Version cannot be null");
+            this.majorVersion = version.major();
+            this.minorVersion = version.minor();
+            this.patchVersion = version.patch();
             webResourcePath = webResourceProcessor.mapWebResourcePath(webResource);
+            webResourceDescription = webResource.description();
             aliases().add(webResourcePath);
             extractMethodAnnotations(webResourceProcessor);
         }
+    }
+
+    public boolean isWebResource() {
+        return webResourcePath != null;
     }
 
     public org.simonworks.projects.context.WebMethod getMethod(HttpVerb verb, String method) {
@@ -94,24 +104,35 @@ public class WebBeanInfo extends BeanInfo {
         return webResourcePath;
     }
 
-    public Version getVersion() {
-        return version;
-    }
-
-    public WebResource getWebResource() {
-        return webResource;
-    }
-
     public Map<HttpVerb, List<WebMethod>> getWebMethodMappings() {
         return webMethodMappings;
+    }
+
+    public int getMajorVersion() {
+        return majorVersion;
+    }
+
+    public int getMinorVersion() {
+        return minorVersion;
+    }
+
+    public int getPatchVersion() {
+        return patchVersion;
+    }
+
+    public String getWebResourceDescription() {
+        return webResourceDescription;
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", WebBeanInfo.class.getSimpleName() + "[", "]")
                 .add("webResourcePath='" + webResourcePath + "'")
+                .add("webResourceDescription='" + webResourceDescription + "'")
+                .add("majorVersion=" + majorVersion)
+                .add("minorVersion=" + minorVersion)
+                .add("patchVersion=" + patchVersion)
                 .add("webMethodMappings=" + webMethodMappings)
-                .add("Other informations=" + super.toString())
                 .toString();
     }
 }

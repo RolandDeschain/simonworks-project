@@ -8,6 +8,9 @@ package org.simonworks.projects.context;
 
 import org.simonworks.projects.utils.StringUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Empty context implementing NullObject Pattern
  */
@@ -41,4 +44,8 @@ class NoopBeanContext implements BeanContext {
         throw new BeanNotExistsException("Bean for name " + name + " is not available");
     }
 
+    @Override
+    public Set<String> beanNamesSet() {
+        return new HashSet<>();
+    }
 }

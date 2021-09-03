@@ -1,4 +1,5 @@
-C:\simonworks\software\projects\simonworks-project\simonworks-web\src\main\java\org\simonworks\projects\webapp\SimonWorksContextServlet.java
-C:\simonworks\software\projects\simonworks-project\simonworks-web\src\main\java\org\simonworks\projects\web\ResourceAndParameters.java
-C:\simonworks\software\projects\simonworks-project\simonworks-web\src\main\java\org\simonworks\projects\web\InvokableControllerRequestProcessor.java
-C:\simonworks\software\projects\simonworks-project\simonworks-web\src\main\java\org\simonworks\projects\web\RequestProcessor.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-web/src/main/java/org/simonworks/projects/web/ResourceAndParameters.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-web/src/main/java/org/simonworks/projects/web/ResponseProcessor.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-web/src/main/java/org/simonworks/projects/webapp/SimonWorksContextServlet.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-web/src/main/java/org/simonworks/projects/web/InvokableControllerRequestProcessor.java
+/Users/SimonWorks/workspace/simonworks-project/simonworks-web/src/main/java/org/simonworks/projects/web/RequestProcessor.java

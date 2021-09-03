@@ -4,25 +4,19 @@
  *
  */
 
-/*
- * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
- *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- */
-
 package org.simonworks.projects.conversion.json;
 
-import org.simonworks.projects.annotations.Prototype;
+import com.google.gson.Gson;
+import org.simonworks.projects.annotations.Singleton;
 import org.simonworks.projects.conversion.Serializer;
 
-import java.lang.reflect.Type;
-
-@Prototype(name = "jsonDeserializer")
+@Singleton(name = "jsonSerializer")
 public class JsonSerializer implements Serializer {
 
+    private Gson gson = new Gson();
+
     @Override
-    public String serialize(Object input) {
-        JsonObject map = JsonObject.map(input);
-        return map.toString();
+    public <I> String serialize(I input) {
+        return gson.toJson(input);
     }
 }

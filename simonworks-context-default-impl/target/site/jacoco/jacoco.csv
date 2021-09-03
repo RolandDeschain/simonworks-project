@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-simonworks-context-default-impl,org.simonworks.projects.context,DefaultBeanContext,65,62,2,2,11,21,2,7,0,7
+simonworks-context-default-impl,org.simonworks.projects.context,DefaultBeanContext,31,60,2,4,4,17,2,6,0,5
 simonworks-context-default-impl,org.simonworks.projects.context,AbstractClasspathBeanRegistryProvider,14,78,3,5,2,23,3,6,0,5
 simonworks-context-default-impl,org.simonworks.projects.context,MapBeanRegistryProvider,0,8,0,0,0,3,0,2,0,2
-simonworks-context-default-impl,org.simonworks.projects.context,MapBeanRegistry,18,126,4,10,5,20,4,12,1,8
+simonworks-context-default-impl,org.simonworks.projects.context,MapBeanRegistry,22,126,4,10,6,20,5,12,2,8

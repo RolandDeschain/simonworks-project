@@ -9,36 +9,41 @@ import org.simonworks.projects.reflection.Typed;
 import org.simonworks.projects.utils.StringUtils;
 import org.springframework.context.ApplicationContext;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-class BeanInfo {
+class BeanInfo implements Serializable {
 
     private List<String> aliases;
 
-    private Typed<?> type;
+    private transient Typed<?> type;
 
     /**
      * Map of bean dependencies. key is the name of a dependency bean, value if the metadata annotation
      */
-    private Map<Field, Dependency> dependencies;
+    private transient Map<Field, Dependency> dependencies;
     /**
      * Special dependency for BeanContext
      */
-    private Field injectableBeanContext;
+    private transient Field injectableBeanContext;
     /**
      * Method to be called after any other creation phase
      */
-    private Method completeSetup;
+    private transient Method completeSetup;
 
     private Lifecycle lifecycle;
 
     enum Lifecycle {
         SINGLETON,
         PROTOTYPE
+    }
+
+    BeanInfo(Class<?> clazz) {
+        this( new Typed(clazz) );
     }
 
     BeanInfo(Typed<?> type) {
@@ -144,7 +149,7 @@ class BeanInfo {
     public String toString() {
         return new StringJoiner(", ", BeanInfo.class.getSimpleName() + "[", "]")
                 .add("aliases=" + aliases + "'")
-                .add("type=" + type)
+                .add("type=" + type.getRawType())
                 .add("dependencies=" + dependencies)
                 .add("lifecycle=" + lifecycle)
                 .toString();

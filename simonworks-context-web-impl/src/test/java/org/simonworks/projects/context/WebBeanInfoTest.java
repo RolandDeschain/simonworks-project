@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.simonworks.projects.context.annotations.Deserialize;
 import org.simonworks.projects.context.annotations.HttpVerb;
 import org.simonworks.projects.context.annotations.Serialize;
+import org.simonworks.projects.reflection.Typed;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -30,10 +31,8 @@ class WebBeanInfoTest {
     }
 
     @Test void testExample() {
-        w = new WebBeanInfo(ExampleWebResource.class, p);
+        w = new WebBeanInfo(new Typed(ExampleWebResource.class), p);
         assertNotNull(w);
-        assertNotNull(w.getWebResource());
-        assertNotNull(w.getVersion());
         assertEquals("/v1.1.1/examples", w.getWebResourcePath());
         Map<HttpVerb, List<WebMethod>> m = w.getWebMethodMappings();
         assertNotNull(m);
@@ -77,7 +76,6 @@ class WebBeanInfoTest {
             }
         }*/
         testMethod( ExampleWebResource.class.getMethod("getByNameOrPrefix", String.class, String.class) );
-
 
     }
 

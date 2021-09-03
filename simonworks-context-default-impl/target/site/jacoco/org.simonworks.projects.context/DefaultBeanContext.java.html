@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultBeanContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context-default-impl</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">DefaultBeanContext.java</span></div><h1>DefaultBeanContext.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultBeanContext.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">simonworks-context-default-impl</a> &gt; <a href="index.source.html" class="el_package">org.simonworks.projects.context</a> &gt; <span class="el_source">DefaultBeanContext.java</span></div><h1>DefaultBeanContext.java</h1><pre class="source lang-java linenums">/*
  * Copyright (c) 2019, SimonWorks and/or its affiliates. All rights reserved.
  *  SIMONWORKS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  *
@@ -12,66 +12,51 @@
 package org.simonworks.projects.context;
 
 import org.simonworks.projects.context.annotation.Dependency;
+import org.simonworks.projects.reflection.ReflectionSupport;
 import org.simonworks.projects.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 public class DefaultBeanContext extends AbstractBeanContext {
 
-<span class="fc" id="L26">    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBeanContext.class);</span>
+<span class="fc" id="L25">    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBeanContext.class);</span>
 
     public DefaultBeanContext(BeanRegistry beanRegistry) {
-<span class="fc" id="L29">        super(beanRegistry);</span>
-<span class="fc" id="L30">    }</span>
+<span class="fc" id="L28">        super(beanRegistry);</span>
+<span class="fc" id="L29">    }</span>
 
     @Override
     public BeanContext self() {
-<span class="fc" id="L34">        return this;</span>
+<span class="fc" id="L33">        return this;</span>
     }
 
     @Override
     protected void doHandleBeanAnnotations(Object bean, BeanInfo beanInfo) {
-<span class="fc" id="L39">        fillDependencies(bean, beanInfo.getDependencies());</span>
-<span class="fc" id="L40">        checkRequiredBeanContext(bean, beanInfo.getInjectableBeanContext());</span>
-<span class="fc" id="L41">        completeBean(bean, beanInfo.getCompleteSetup());</span>
-<span class="fc" id="L42">    }</span>
-
-    private void completeBean(Object result, Method completeSetup) {
-<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if(completeSetup != null) {</span>
-<span class="nc" id="L46">            boolean accessible = completeSetup.isAccessible();</span>
-<span class="nc" id="L47">            completeSetup.setAccessible(true);</span>
-            try {
-<span class="nc" id="L49">                completeSetup.invoke(result);</span>
-<span class="nc" id="L50">            } catch (IllegalAccessException | InvocationTargetException e) {</span>
-<span class="nc" id="L51">                LOGGER.error(&quot;Exception while invoking completeBean(Object &lt;{}&gt;, Method &lt;{}&gt;)&quot;, result, completeSetup, e);</span>
-<span class="nc" id="L52">            }</span>
-<span class="nc" id="L53">            completeSetup.setAccessible(accessible);</span>
+<span class="fc" id="L38">        fillDependencies(bean, beanInfo.getDependencies());</span>
+<span class="fc" id="L39">        checkRequiredBeanContext(bean, beanInfo.getInjectableBeanContext());</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if(beanInfo.getCompleteSetup() != null) {</span>
+<span class="nc" id="L41">            ReflectionSupport.invokeMethod(bean, beanInfo.getCompleteSetup());</span>
         }
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L43">    }</span>
 
     private void fillDependencies(Object result, Map&lt;Field, Dependency&gt; dependencies) {
-<span class="fc" id="L58">        dependencies.forEach((field, d) -&gt; {</span>
-<span class="fc" id="L59">            boolean accessible = field.isAccessible();</span>
-<span class="fc" id="L60">            field.setAccessible(true);</span>
-<span class="fc" id="L61">            Object bean = getBean(d.beanName());</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for (Map.Entry&lt;Field, Dependency&gt; entry : dependencies.entrySet()) {</span>
+<span class="fc" id="L47">            Field field = entry.getKey();</span>
+<span class="fc" id="L48">            Dependency d = entry.getValue();</span>
             try {
-<span class="fc" id="L63">                field.set(result, bean);</span>
-<span class="fc" id="L64">                String afterInjectionMethod = d.afterInjectionMethod();</span>
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                if(StringUtils.isNotEmpty(afterInjectionMethod) ) {</span>
-<span class="nc" id="L66">                    Method method = result.getClass().getMethod(afterInjectionMethod);</span>
-<span class="nc" id="L67">                    method.invoke(result);</span>
+<span class="fc" id="L50">                ReflectionSupport.writeValue(result, field.getName(), getBean(d.beanName()));</span>
+<span class="fc" id="L51">                String afterInjectionMethod = d.afterInjectionMethod();</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">                if (StringUtils.isNotEmpty(afterInjectionMethod)) {</span>
+<span class="nc" id="L53">                    ReflectionSupport.invokeMethod(result, afterInjectionMethod);</span>
                 }
-<span class="nc" id="L69">            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {</span>
-<span class="nc" id="L70">                LOGGER.error(&quot;Exception invoking fillDependencies(Object &lt;{}&gt;, Map&lt;Field, Dependency&gt; &lt;{}&gt;&quot;, result, dependencies, e);</span>
-<span class="fc" id="L71">            }</span>
-<span class="fc" id="L72">            field.setAccessible(accessible);</span>
-<span class="fc" id="L73">        });</span>
-<span class="fc" id="L74">    }</span>
+<span class="nc" id="L55">            } catch (Exception e) {</span>
+<span class="nc" id="L56">                LOGGER.error(&quot;Exception invoking fillDependencies(Object &lt;{}&gt;, Map&lt;Field, Dependency&gt; &lt;{}&gt;&quot;, result, dependencies, e);</span>
+<span class="fc" id="L57">            }</span>
+<span class="fc" id="L58">        }</span>
+<span class="fc" id="L59">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

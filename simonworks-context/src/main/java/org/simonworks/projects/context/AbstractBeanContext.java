@@ -13,7 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,6 +47,11 @@ abstract class AbstractBeanContext implements BeanContext {
         }
         handleBeanAnnotations(result, beanInfo);
         return (T) result;
+    }
+
+    @Override
+    public Set<String> beanNamesSet() {
+        return beanRegistry.beanNamesSet();
     }
 
     private Object processSingleton(BeanInfo beanInfo) {
